@@ -23,7 +23,8 @@ public class LevelSelectMenu : MonoBehaviour
 
     void OnEnable()
     {
-        Open();
+        if (TitleScreen.TitleScreenShown)
+            Open();
     }
 
     public void Open()
@@ -85,5 +86,10 @@ public class LevelSelectMenu : MonoBehaviour
 
         CurrentStage = GameManager.Instance.Run.UnlockedStages[CurrentStageIndex];
         LoadCurrentStage();
+    }
+
+    public void HomeButton()
+    {
+        GameManager.Instance.BackFromSelectToTitle();
     }
 }

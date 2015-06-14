@@ -8,6 +8,8 @@ public class TitleScreen : MonoBehaviour
 {
     public static bool Busy = false;
 
+    public static bool TitleScreenShown = false;
+
     public AudioClip MusicClip;
 
     public Animator Intro;
@@ -20,8 +22,8 @@ public class TitleScreen : MonoBehaviour
 
     void Start()
     {
-        AnimationEnded = true; //HACK
         MemorizeTweens();
+        TitleScreenShown = true;
     }
 
     void OnEnable()
@@ -51,6 +53,9 @@ public class TitleScreen : MonoBehaviour
 
     public void PlayButton()
     {
+        Play();
+
+
         if (Busy)
             return;
 
