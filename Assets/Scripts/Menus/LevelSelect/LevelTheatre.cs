@@ -22,7 +22,7 @@ public class LevelTheatre : MonoBehaviour
 
     public void Load(Stage zStage, int zIndex)
     {
-        StageName.text = zStage.Name;
+        StageName.text = "Level " + zIndex.ToString() + " - " + zStage.Name;
         StageIcon.sprite = zStage.Icon;
         StageDifficulty.SetDifficulty(zStage.Difficulty);
         SetArrows(zIndex);

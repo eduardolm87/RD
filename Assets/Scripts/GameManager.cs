@@ -27,13 +27,13 @@ public class GameManager : MonoBehaviour
     public static bool MoveWithMouseMode = true;
     public static bool UsePowerBarWithTouchDuration = true;
     public static bool ShowRotatingArrow = false;
-    public static bool WinStagesWith1Key = false;
     public static bool SwipeToChargePower = true;
     public static bool DebuggingStageMode = true;
 
     public bool ResetAtStart = false;
     public bool MuteMusic = false;
     public bool MuteSFX = false;
+    public bool WinStagesWith1Key = true;
 
 
     [HideInInspector]

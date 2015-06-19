@@ -141,7 +141,7 @@ public class Player : MonoBehaviour
         Attributes.Restore();
 
         CharSprite.Sprites.ToList().ForEach(s => s = HeroData.Graphic);
-        
+
         //Upgrades (later)
     }
 
@@ -464,15 +464,16 @@ public class Player : MonoBehaviour
 
     void AutoWinCheat()
     {
-        if (GameManager.WinStagesWith1Key)
+        if (GameManager.Instance.WinStagesWith1Key)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                Monster[] _monsters = GameObject.FindObjectsOfType<Monster>();
-                foreach (Monster _m in _monsters)
-                {
-                    _m.Damage(999);
-                }
+                GameManager.Instance.WinStage();
+                //Monster[] _monsters = GameObject.FindObjectsOfType<Monster>();
+                //foreach (Monster _m in _monsters)
+                //{
+                //    _m.Damage(999);
+                //}
             }
         }
 
