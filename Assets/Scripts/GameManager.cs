@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
     public SaveManager Progress;
     public Collections Collections;
     public RunProgress Run = new RunProgress();
+    public LevelSelectMenu LevelSelectMenu;
 
     public GameObject GameCamera;
     public GameObject PlayerObject;
@@ -226,7 +227,11 @@ public class GameManager : MonoBehaviour
 
         //Play music
 
+        LevelSelectMenu.Theatre.Curtains.InstantClose();
+
         ChangeWindow(SelectStageWindow);
+
+        LevelSelectMenu.Open();
     }
 
     void DestroyCurrentScene()
@@ -251,6 +256,7 @@ public class GameManager : MonoBehaviour
         { 
             //Win
             Progress.SaveProgress();
+
             OpenStageSelect(); 
 
         }) });

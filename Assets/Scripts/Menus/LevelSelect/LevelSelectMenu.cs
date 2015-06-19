@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class LevelSelectMenu : MonoBehaviour
 {
     [SerializeField]
-    private LevelTheatre Theatre;
+    public LevelTheatre Theatre;
 
     [SerializeField]
     public PCStats PCStats;
@@ -31,7 +31,7 @@ public class LevelSelectMenu : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        if (CurrentStage == null)
+        //if (CurrentStage == null)
         {
             CurrentStage = GameManager.Instance.Run.GetNextPlayableStage();
             CurrentStageIndex = GameManager.Instance.Run.GetStageIndex(CurrentStage);
@@ -45,7 +45,7 @@ public class LevelSelectMenu : MonoBehaviour
     {
         PCStats.Load();
 
-        Theatre.Load(CurrentStage, CurrentStageIndex);
+        StartCoroutine(Theatre.Load(CurrentStage, CurrentStageIndex));
     }
 
     public void Close()
@@ -60,6 +60,9 @@ public class LevelSelectMenu : MonoBehaviour
 
     public void ArrowFwd()
     {
+        if (Theatre.Curtains.Busy)
+            return;
+
         CurrentStageIndex++;
 
         if (CurrentStageIndex >= GameManager.Instance.Run.UnlockedStages.Count)
@@ -75,6 +78,9 @@ public class LevelSelectMenu : MonoBehaviour
 
     public void ArrowBck()
     {
+        if (Theatre.Curtains.Busy)
+            return;
+
         CurrentStageIndex--;
 
         if (CurrentStageIndex < 0)

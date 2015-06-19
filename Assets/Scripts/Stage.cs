@@ -69,7 +69,7 @@ public class Stage : MonoBehaviour
         switch (Goal)
         {
             case StageGoals.KillAllEnemies:
-                return "Kill all enemies (" + NumberOfLivingMonsters() + " left)";
+                return "Kill all enemies" + AppendNumberOfLivingMonsters();
 
             case StageGoals.GetItem:
                 return "Get " + ItemToGet.name;
@@ -82,5 +82,13 @@ public class Stage : MonoBehaviour
         }
 
         return "";
+    }
+
+    string AppendNumberOfLivingMonsters()
+    {
+        if (GameManager.Instance.currentPlayer != null)
+            return " (" + NumberOfLivingMonsters() + " left)";
+        else
+            return "";
     }
 }
