@@ -19,24 +19,24 @@ public class LevelSelectMenu : MonoBehaviour
     [HideInInspector]
     public int CurrentStageIndex = 0;
 
+    bool AcceptInput { get { return !Theatre.Curtains.Busy; } }
 
+    //void OnEnable()
+    //{
+    //    if (TitleScreen.TitleScreenShown)
+    //        Open();
+    //}
 
-    void OnEnable()
-    {
-        if (TitleScreen.TitleScreenShown)
-            Open();
-    }
-
-    public void Open()
+    public void Open(Stage zStageToLoad = null)
     {
         gameObject.SetActive(true);
 
-        //if (CurrentStage == null)
+        if (zStageToLoad == null)
         {
-            CurrentStage = GameManager.Instance.Run.GetNextPlayableStage();
-            CurrentStageIndex = GameManager.Instance.Run.GetStageIndex(CurrentStage);
+            CurrentStage = GameManager.Instance.Run.GetLastUnlockedStage();
         }
 
+        CurrentStageIndex = GameManager.Instance.Run.GetStageIndex(CurrentStage);
 
         LoadCurrentStage();
     }
@@ -55,12 +55,15 @@ public class LevelSelectMenu : MonoBehaviour
 
     public void StartGame()
     {
+        if (!AcceptInput)
+            return;
+
         GameManager.Instance.StartCoroutine(GameManager.Instance.LoadStage(CurrentStage));
     }
 
     public void ArrowFwd()
     {
-        if (Theatre.Curtains.Busy)
+        if (!AcceptInput)
             return;
 
         CurrentStageIndex++;
@@ -78,7 +81,7 @@ public class LevelSelectMenu : MonoBehaviour
 
     public void ArrowBck()
     {
-        if (Theatre.Curtains.Busy)
+        if (!AcceptInput)
             return;
 
         CurrentStageIndex--;
@@ -96,6 +99,11 @@ public class LevelSelectMenu : MonoBehaviour
 
     public void HomeButton()
     {
+        if (!AcceptInput)
+            return;
+
         GameManager.Instance.BackFromSelectToTitle();
     }
+
+
 }

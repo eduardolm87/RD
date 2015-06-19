@@ -24,6 +24,8 @@ public class LevelTheatre : MonoBehaviour
     [SerializeField]
     private Text NewIcon;
 
+    int previousStageIndex = -1;
+
 
     public TheatreCurtain Curtains;
 
@@ -38,8 +40,8 @@ public class LevelTheatre : MonoBehaviour
 
         if (!Curtains.Closed)
         {
-            Curtains.Close();
-            yield return new WaitForSeconds(Curtains.MovementTime);
+            Curtains.Close(GetDirectionOfClose(previousStageIndex, zIndex));
+            yield return new WaitForSeconds(Curtains.MaxTime);
         }
 
         StageName.text = "Level " + zIndex.ToString() + " - " + zStage.Name;
@@ -50,18 +52,44 @@ public class LevelTheatre : MonoBehaviour
 
         NewIcon.gameObject.SetActive(zIndex == GameManager.Instance.Run.UnlockedStages.Count - 1);
 
-
         yield return null;
-
-        yield return new WaitForSeconds(0.25f);
 
         if (Curtains.Closed)
         {
-            Curtains.Open();
-            yield return new WaitForSeconds(Curtains.MovementTime);
+            Curtains.Open(GetDirectionOfOpen(previousStageIndex, zIndex));
+            yield return new WaitForSeconds(Curtains.MaxTime);
         }
 
+        previousStageIndex = zIndex;
         Curtains.Busy = false;
+    }
+
+    int GetDirectionOfOpen(int zOldIndex, int zNewIndex)
+    {
+        if (zOldIndex < zNewIndex)
+        {
+            return -1;
+        }
+        else if (zOldIndex > zNewIndex)
+        {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    int GetDirectionOfClose(int zOldIndex, int zNewIndex)
+    {
+        if (zOldIndex < zNewIndex)
+        {
+            return 1;
+        }
+        else if (zOldIndex > zNewIndex)
+        {
+            return -1;
+        }
+
+        return 0;
     }
 
 

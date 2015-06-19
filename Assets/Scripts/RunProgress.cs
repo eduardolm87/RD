@@ -11,7 +11,7 @@ public class RunProgress
     public Hero CurrentHero = null;
 
 
-    public Stage GetNextPlayableStage()
+    public Stage GetLastUnlockedStage()
     {
         return UnlockedStages.Last();
     }

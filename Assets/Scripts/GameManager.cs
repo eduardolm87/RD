@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
         GameObject _stageObj = GameObject.Instantiate(stg.gameObject, stg.gameObject.transform.position, Quaternion.identity) as GameObject;
         _stageObj.transform.parent = GameWindow.transform;
         currentlyLoadedStage = _stageObj.GetComponent<Stage>();
-        _stageObj.name = stg.Name;
+        _stageObj.name = stg.name;
 
 
         //Create the player
@@ -231,7 +231,36 @@ public class GameManager : MonoBehaviour
 
         ChangeWindow(SelectStageWindow);
 
-        LevelSelectMenu.Open();
+        OpenLastOrCurrentStage();
+    }
+
+    void OpenLastOrCurrentStage()
+    {
+        if (lastLoadedStagePrefab != null)
+            LevelSelectMenu.Open(Run.UnlockedStages.FirstOrDefault(s => s.name == lastLoadedStagePrefab.name));
+        else
+            LevelSelectMenu.Open();
+
+        //bool openCurrent = false;
+        //if (lastLoadedStagePrefab != null && Run.UnlockedStages.Count >= 2)
+        //{
+        //    int justPlayedIndex = Run.GetStageIndex(lastLoadedStagePrefab);
+        //    int lastStageIndex = Run.GetStageIndex(Run.UnlockedStages[Run.UnlockedStages.Count - 2]);
+
+        //    if (justPlayedIndex < lastStageIndex)
+        //    {
+        //        openCurrent = true;
+        //    }
+        //}
+
+        //if (openCurrent)
+        //{
+        //    LevelSelectMenu.Open(Run.UnlockedStages.FirstOrDefault(s => s.name == lastLoadedStagePrefab.name));
+        //}
+        //else
+        //{
+        //    LevelSelectMenu.Open();
+        //}
     }
 
     void DestroyCurrentScene()
@@ -247,7 +276,7 @@ public class GameManager : MonoBehaviour
     {
         SoundManager.MusicFadeOff();
 
-        UnlockNextStage();
+        UnlockNextStage(currentlyLoadedStage);
 
         //Message & save
         //GamePopup.Show("Stage cleared!\n" + "Time: <color=" + (_newRecord ? "yellow" : "white") + ">" + SecondsToTime(_completedTime) + "</color>", new PopupButton[] { new PopupButton("Ok", () => 
@@ -290,9 +319,18 @@ public class GameManager : MonoBehaviour
             }) });
     }
 
-    void UnlockNextStage()
+    void UnlockNextStage(Stage zCompletedStage)
     {
-        Run.AddNewStage();
+        if (zCompletedStage == null)
+        {
+            Debug.LogError("Error: completed a nonexistant stage");
+            return;
+        }
+
+        if (zCompletedStage.name == Run.GetLastUnlockedStage().name)
+        {
+            Run.AddNewStage();
+        }
     }
 
     public void BackFromSelectToTitle()
