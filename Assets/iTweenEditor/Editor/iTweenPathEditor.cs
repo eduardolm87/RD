@@ -1,4 +1,4 @@
-//by Bob Berkebile : Pixelplacement : http://www.pixelplacement.com
+//by Bob Berkebile : Pixelplacement
 
 using UnityEngine;
 using UnityEditor;

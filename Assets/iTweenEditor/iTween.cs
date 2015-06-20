@@ -89,7 +89,7 @@ public class iTween : MonoBehaviour
     private bool useRealTime; // Added by PressPlay
 
     /// <summary>
-    /// The type of easing to use based on Robert Penner's open source easing equations (http://www.robertpenner.com/easing_terms_of_use.html).
+    /// The type of easing to use based on Robert Penner's open source easing equations.
     /// </summary>
     public enum EaseType
     {
