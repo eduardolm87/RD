@@ -10,11 +10,17 @@ public class Switch : MonoBehaviour
 
     public bool State = false;
 
+    public bool OnePressOnly = false;
+
     void OnTriggerStay2D(Collider2D other)
     {
         if (other.GetComponent<Rigidbody2D>() != null)
         {
-            State = true;
+            if (!OnePressOnly)
+                State = true;
+            else
+                State = true;
+
             UpdateSprite();
         }
     }
@@ -23,7 +29,9 @@ public class Switch : MonoBehaviour
     {
         if (other.GetComponent<Rigidbody2D>() != null)
         {
-            State = false;
+            if (!OnePressOnly)
+                State = false;
+
             UpdateSprite();
         }
     }

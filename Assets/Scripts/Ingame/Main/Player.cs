@@ -159,7 +159,13 @@ public class Player : MonoBehaviour
                 break;
 
             case InputState.FIRSTTOUCH:
-                aimingFrom = Input.mousePosition;
+                if (Vector2.Distance(Input.mousePosition, Camera.main.WorldToScreenPoint(transform.position)) < 100)
+                {
+                    aimingFrom = Input.mousePosition;
+                }
+                else
+                    aimingFrom = null;
+
                 break;
 
             case InputState.CONTINUETOUCH:

@@ -25,6 +25,17 @@ public class Monster : MonoBehaviour
     void Start()
     {
         Attributes.Restore();
+
+        if (UI == null)
+        {
+            UI = GetComponentInChildren<NPCGUI>();
+        }
+
+        if (CharSprite == null)
+        {
+            CharSprite = GetComponentInChildren<CharacterSprite>();
+        }
+
         UI.ShowHP(Attributes.HP);
         AIArtifact = GetComponentInChildren<AIArtifact>();
     }

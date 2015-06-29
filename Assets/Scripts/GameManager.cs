@@ -151,7 +151,6 @@ public class GameManager : MonoBehaviour
         currentlyLoadedStage = _stageObj.GetComponent<Stage>();
         _stageObj.name = stg.name;
 
-
         //Create the player
         GameObject _playerObj = Instantiate(PlayerObject, currentlyLoadedStage.StartPoint.position, Quaternion.identity) as GameObject;
         currentPlayer = _playerObj.GetComponent<Player>();
@@ -172,8 +171,18 @@ public class GameManager : MonoBehaviour
         LoadRandomMusic();
 
         //Curtain
+        iTween.MoveFrom(_playerObj, iTween.Hash("y", 5, "islocal", true, "time", 1 + Curtain.Instance.Duration, "easetype", iTween.EaseType.easeOutBounce));
         Curtain.Instance.Hide();
         yield return new WaitForSeconds(Curtain.Instance.Duration);
+
+        //Hero Appear bouncing
+        GameCamera cam = GameObject.FindObjectOfType<GameCamera>();
+        Transform cameraParent = cam.transform.parent;
+        cam.transform.parent = null;
+        yield return new WaitForSeconds(1);
+
+        cam.transform.SetParent(cameraParent, true);
+
 
         _loadingStageLocked = false;
     }

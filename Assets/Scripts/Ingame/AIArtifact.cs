@@ -60,6 +60,9 @@ public class AIArtifact : MonoBehaviour
             if (_currentBehavior >= Behaviors.Count)
                 _currentBehavior = 0;
 
+            if (_currentBehavior >= Behaviors.Count)
+                return;
+
             if (Behaviors[_currentBehavior].Type == Behavior.Types.Random)
                 Behaviors[_currentBehavior].Direction_Nrml_Rnd = new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f));
 
@@ -134,7 +137,16 @@ public class AIArtifact : MonoBehaviour
         if (_musicChanged)
             return;
 
-        if (GetComponent<Monster>().Attributes.Alterations.Contains(Alteration.Boss) && GetComponent<SpriteRenderer>().isVisible)
+        bool isBoss = false;
+        Monster monster = GetComponent<Monster>();
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        if (monster != null && renderer != null)
+        {
+            if (monster.Attributes.Alterations.Contains(Alteration.Boss) && renderer.isVisible)
+                isBoss = true;
+        }
+
+        if (isBoss)
         {
             GameManager.Instance.SoundManager.PlayMusic(GameManager.Instance.SoundManager.GetCurrentMusicClip(), 1.5f);
             _musicChanged = true;

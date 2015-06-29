@@ -12,16 +12,6 @@ public class GameCamera : MonoBehaviour
         originalLocalPosition = transform.localPosition;
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Shake();
-        }
-    }
-
-
-
     public void Shake(float duration = 0.1f)
     {
         iTween.ShakePosition(gameObject, Vector3.one * 0.1f, duration);
