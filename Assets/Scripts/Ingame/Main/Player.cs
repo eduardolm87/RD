@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
 
     private Hero HeroData;
 
+    public Collider2D Collider;
+
     [HideInInspector]
     public float AccumulatedPower = 0;
 
@@ -34,6 +36,7 @@ public class Player : MonoBehaviour
     float lowspeedThreshold = 3;
     float msUnderLowspeedTreshold = 0.25f;
     float lowspdTr_time = 0;
+    float smokeRunTime = 0;
     float combatMinForceThreshold = 10;
     List<Monster> _monstersCollidedWith = new List<Monster>();
 
@@ -58,6 +61,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        Collider = GetComponent<Collider2D>();
         ChangeMode(Modes.AIMING);
         InvokeRepeating("RefreshHUD", 0, refreshHUDFreq);
     }
@@ -227,6 +231,12 @@ public class Player : MonoBehaviour
         else
         {
             lowspdTr_time = Time.time;
+
+            if (Time.time - smokeRunTime > 0.18f)
+            {
+                GameManager.Instance.Effects.SmallSmoke(transform.position);
+                smokeRunTime = Time.time;
+            }
         }
     }
 
@@ -235,6 +245,12 @@ public class Player : MonoBehaviour
         GetComponent<Rigidbody2D>().velocity = AimHUD.GetDirection() * strength * AccumulatedPower;
 
         ChangeMode(Modes.OUTOFCONTROL);
+
+        GameManager.Instance.SoundManager.Play("Charge");
+
+        GameManager.Instance.Effects.SmallSmoke(transform.position);
+
+        smokeRunTime = Time.time;
 
         AccumulatedPower = 0;
     }
@@ -387,7 +403,7 @@ public class Player : MonoBehaviour
         if (other.GetComponent<Rigidbody2D>() != null)
         {
             //Mobile objects
-            GameManager.Instance.SoundManager.Play("bump");
+            GameManager.Instance.SoundManager.Play("BumpWithOtherRigidbodies");
             GetComponent<Rigidbody2D>().velocity /= 4;
         }
 
@@ -400,19 +416,19 @@ public class Player : MonoBehaviour
             {
                 GetComponent<Rigidbody2D>().velocity *= 1.25f;
             }
-            GameManager.Instance.SoundManager.Play("bouncehit");
+            GameManager.Instance.SoundManager.Play("BumpWithRubber");
         }
         else
         {
             //Default walls
-            GameManager.Instance.SoundManager.Play("wall");
+            GameManager.Instance.SoundManager.Play("BumpWithWall");
         }
 
     }
 
     public void Heal(int quantity)
     {
-        GameManager.Instance.SoundManager.Play("foodeat");
+        GameManager.Instance.SoundManager.Play("FoodEat");
         Attributes.Stamina = Mathf.Clamp(Attributes.Stamina + quantity, 0, Attributes.Stamina_max);
     }
 
@@ -425,7 +441,7 @@ public class Player : MonoBehaviour
                 quantity = 1;
         }
 
-        GameManager.Instance.SoundManager.Play("bighit");
+        GameManager.Instance.SoundManager.Play("DamageToPlayer");
         Attributes.Stamina = Mathf.Clamp(Attributes.Stamina - quantity, 0, Attributes.Stamina_max);
 
         if (quantity > 0)

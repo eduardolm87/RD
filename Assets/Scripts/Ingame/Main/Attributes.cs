@@ -22,10 +22,21 @@ public class Attributes
     public int HP = 3;
     public int HPmax = 3;
 
+    public float Impulse_max = 20;//16;
+    [UnityEngine.HideInInspector]
+    public float Impulse;
+
     public virtual void Restore()
     {
         HP = HPmax;
+        Impulse = Impulse_max;
     }
+}
+
+[Serializable]
+public class MonsterAttributes : Attributes
+{
+    public float range = 5;
 }
 
 [Serializable]
@@ -34,7 +45,6 @@ public class PlayerAttributes : Attributes
     public int Money = 0;
 
     public int Attack_max = 1;
-    public float Impulse_max = 20;//16;
     public float Precission_max = 6;
     public int Stamina_max = 10;
     public int Defense_max = 0;
@@ -42,8 +52,7 @@ public class PlayerAttributes : Attributes
 
     [UnityEngine.HideInInspector]
     public int Attack;
-    [UnityEngine.HideInInspector]
-    public float Impulse;
+
     [UnityEngine.HideInInspector]
     public float Precission;
     [UnityEngine.HideInInspector]
@@ -58,9 +67,9 @@ public class PlayerAttributes : Attributes
 
     public override void Restore()
     {
-        HP = HPmax;
+        base.Restore();
+
         Attack = Attack_max;
-        Impulse = Impulse_max;
         Precission = Precission_max;
         Stamina = Stamina_max;
     }

@@ -58,7 +58,7 @@ public class Door : MonoBehaviour
         Opened = _open;
         Renderer.sprite = Opened ? OpenSprite : CloseSprite;
         GetComponent<Collider2D>().enabled = !Opened;
-        GameManager.Instance.SoundManager.Play("door_close");
+        GameManager.Instance.SoundManager.Play("DoorOpenClose");
     }
 
 }

@@ -171,6 +171,7 @@ public class GameManager : MonoBehaviour
         LoadRandomMusic();
 
         //Curtain
+        currentPlayer.Collider.enabled = false;
         iTween.MoveFrom(_playerObj, iTween.Hash("y", 5, "islocal", true, "time", 1 + Curtain.Instance.Duration, "easetype", iTween.EaseType.easeOutBounce));
         Curtain.Instance.Hide();
         yield return new WaitForSeconds(Curtain.Instance.Duration);
@@ -179,8 +180,18 @@ public class GameManager : MonoBehaviour
         GameCamera cam = GameObject.FindObjectOfType<GameCamera>();
         Transform cameraParent = cam.transform.parent;
         cam.transform.parent = null;
-        yield return new WaitForSeconds(1);
+       
+        yield return new WaitForSeconds(0.15f);
+        SoundManager.Play("BumpWithOtherRigidbodies");
+        yield return new WaitForSeconds(0.45f);
+        SoundManager.Play("BumpWithOtherRigidbodies");
+        yield return new WaitForSeconds(0.2f);
+        SoundManager.Play("BumpWithOtherRigidbodies");
+        yield return new WaitForSeconds(0.2f);
+        
 
+
+        currentPlayer.Collider.enabled = true;
         cam.transform.SetParent(cameraParent, true);
 
 
@@ -289,7 +300,7 @@ public class GameManager : MonoBehaviour
 
         //Message & save
         //GamePopup.Show("Stage cleared!\n" + "Time: <color=" + (_newRecord ? "yellow" : "white") + ">" + SecondsToTime(_completedTime) + "</color>", new PopupButton[] { new PopupButton("Ok", () => 
-        SoundManager.Play("winstage");
+        SoundManager.Play("WinStage");
         GamePopup.Show("Stage cleared!\n", new PopupButton[] { new PopupButton("Ok", () => 
         { 
             //Win
@@ -304,7 +315,7 @@ public class GameManager : MonoBehaviour
     {
         SoundManager.MusicFadeOff();
 
-        SoundManager.Play("losestage");
+        SoundManager.Play("LoseStage");
         GamePopup.Show("Game Over", new PopupButton[] { 
             new PopupButton("Try Again", () => 
             {

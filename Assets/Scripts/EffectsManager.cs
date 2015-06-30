@@ -23,6 +23,23 @@ public class EffectsManager : MonoBehaviour
     {
         Destroy(_smokes.Dequeue());
     }
+
+
+    public GameObject ObjSmallSmoke;
+    Queue<GameObject> _smallsmokes = new Queue<GameObject>();
+    public void SmallSmoke(Vector2 spawnPosition)
+    {
+        GameObject Particle = GameObject.Instantiate(ObjSmallSmoke, spawnPosition, Quaternion.identity) as GameObject;
+        _smallsmokes.Enqueue(Particle);
+
+        iTween.ScaleTo(Particle, iTween.Hash("scale", new Vector3(0.75f, 0.75f, 1), "time", 0.3f));
+
+        Invoke("SmallSmoke_Off", 0.3f);
+    }
+    void SmallSmoke_Off()
+    {
+        Destroy(_smallsmokes.Dequeue());
+    }
     #endregion
 
     #region Minitext
@@ -43,6 +60,4 @@ public class EffectsManager : MonoBehaviour
     }
 
     #endregion
-
-
 }

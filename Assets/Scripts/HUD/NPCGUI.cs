@@ -1,32 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 
 public class NPCGUI : MonoBehaviour
 {
-    public GameObject HpPelletPrefab;
+    [HideInInspector]
+    public Monster Entity = null;
+
+    [SerializeField]
+    private Image HPBar;
 
 
-    public void ShowHP(int hp)
+    public static NPCGUI CreateNPCGUI(Monster zEntity)
     {
-        if (hp < 0 || hp > 20)
-            return;
+        NPCGUI newNPCGUI = (Instantiate(GameManager.Instance.Collections.PrefabReferences.NPCGUI.gameObject, zEntity.transform.position, Quaternion.identity) as GameObject).GetComponent<NPCGUI>();
 
-        int _children = transform.childCount;
+        newNPCGUI.Entity = zEntity;
+        newNPCGUI.transform.SetParent(zEntity.transform);
+        newNPCGUI.transform.localPosition += Vector3.up * (newNPCGUI.Entity.Collider.bounds.size.y / 2f);
 
-        while (_children > hp)
-        {
-            Destroy(transform.GetChild(_children - 1).gameObject);
-            _children--;
-        }
-
-        while (_children < hp)
-        {
-            GameObject _pellet = GameObject.Instantiate(HpPelletPrefab, transform.position, Quaternion.identity) as GameObject;
-            _pellet.transform.parent = transform;
-            _pellet.transform.localScale = HpPelletPrefab.transform.localScale;
-            _children++;
-        }
+        return newNPCGUI;
     }
 
+    void Start()
+    {
+        Refresh();
+    }
+
+    public void Refresh()
+    {
+        if (Entity == null)
+            return;
+
+        HPBar.fillAmount = Mathf.Clamp01(Entity.Attributes.HP * 1f / Entity.Attributes.HPmax);
+    }
 }

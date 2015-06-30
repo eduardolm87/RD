@@ -5,16 +5,9 @@ using System.Linq;
 
 public class Monster : MonoBehaviour
 {
-    public Attributes Attributes = new Attributes();
+    public MonsterAttributes Attributes = new MonsterAttributes();
 
     public List<Reward> Rewards = new List<Reward>();
-
-    public NPCGUI UI;
-
-    public CharacterSprite CharSprite;
-
-    AIArtifact AIArtifact;
-
 
     [HideInInspector]
     public bool CollidedWithPlayer = false;
@@ -22,22 +15,31 @@ public class Monster : MonoBehaviour
     public bool AttackedByPlayer = false;
 
 
+    [HideInInspector]
+    public CharacterSprite CharSprite;
+    [HideInInspector]
+    public Brain Brain;
+    [HideInInspector]
+    public Rigidbody2D Rigidbody;
+    [HideInInspector]
+    public Collider2D Collider;
+    [HideInInspector]
+    public NPCGUI UI;
+
+
+
+    void Awake()
+    {
+        CharSprite = GetComponentInChildren<CharacterSprite>();
+        Brain = GetComponentInChildren<Brain>();
+        Rigidbody = GetComponentInChildren<Rigidbody2D>();
+        Collider = GetComponentInChildren<Collider2D>();
+        UI = NPCGUI.CreateNPCGUI(this);
+    }
+
     void Start()
     {
         Attributes.Restore();
-
-        if (UI == null)
-        {
-            UI = GetComponentInChildren<NPCGUI>();
-        }
-
-        if (CharSprite == null)
-        {
-            CharSprite = GetComponentInChildren<CharacterSprite>();
-        }
-
-        UI.ShowHP(Attributes.HP);
-        AIArtifact = GetComponentInChildren<AIArtifact>();
     }
 
     public void Damage(int quantity, GameObject source = null)
@@ -54,14 +56,14 @@ public class Monster : MonoBehaviour
         }
         else
         {
-            GameManager.Instance.SoundManager.Play("hit");
-            UI.ShowHP(Attributes.HP);
+            GameManager.Instance.SoundManager.Play("DamageToEntity");
+            UI.Refresh();
             CharSprite.WinkInColor(GameManager.Instance.Effects.DamagedColor);
 
             if (!_resistDamage)
                 GameManager.Instance.Effects.Minitext(quantity.ToString(), Color.white, ((Vector2)Camera.main.WorldToScreenPoint(transform.position) + Vector2.up * 20), gameObject);
 
-            if (AIArtifact != null)
+            if (Brain != null)
             {
                 InvokeRepeating("RestoreAnimation", 0.25f, 0.25f);
             }
@@ -78,7 +80,7 @@ public class Monster : MonoBehaviour
             }
         }
 
-        GameManager.Instance.SoundManager.Play("enemydie");
+        GameManager.Instance.SoundManager.Play("EnemyDie");
         GameManager.Instance.Effects.Smoke(transform.position);
         DropReward();
         Destroy(gameObject);
@@ -86,13 +88,13 @@ public class Monster : MonoBehaviour
 
     public void DisableAnimation()
     {
-        if (AIArtifact == null)
+        if (Brain == null)
             return;
 
         if (Attributes.Alterations.Contains(Alteration.NonstopAnimation))
             return;
 
-        AIArtifact.enabled = false;
+        Brain.enabled = false;
         AttackedByPlayer = true;
     }
 
@@ -100,7 +102,7 @@ public class Monster : MonoBehaviour
     {
         if (GetComponent<Rigidbody2D>().velocity.sqrMagnitude < 2)
         {
-            AIArtifact.enabled = true;
+            Brain.enabled = true;
             AttackedByPlayer = false;
 
             CancelInvoke("RestoreAnimation");
@@ -110,13 +112,13 @@ public class Monster : MonoBehaviour
     public void PauseForAMoment(float time)
     {
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        AIArtifact.enabled = false;
+        Brain.enabled = false;
         Invoke("RestoreFromPause", time);
     }
 
     void RestoreFromPause()
     {
-        AIArtifact.enabled = true;
+        Brain.enabled = true;
     }
 
     public void AttackPlayer()
