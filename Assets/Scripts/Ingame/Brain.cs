@@ -52,6 +52,12 @@ public class Brain : MonoBehaviour
         }
     }
 
+    protected void ChargeTowardsPlayer(float zSpeed)
+    {
+        monster.AttackPlayer();
+        MoveTowardsPlayer(zSpeed);
+    }
+
     protected void MoveTowardsPlayer(float zSpeed)
     {
         Vector2 direction = (GameManager.Instance.currentPlayer.transform.position - transform.position).normalized;
@@ -88,6 +94,15 @@ public class Brain : MonoBehaviour
             return false;
     }
 
+    public float DistanceToPlayer
+    {
+        get { return ((GameManager.Instance.currentPlayer.transform.position - transform.position).magnitude); }
+    }
+
+    public float SqrDistanceToPlayer
+    {
+        get { return ((GameManager.Instance.currentPlayer.transform.position - transform.position).sqrMagnitude); }
+    }
 
     protected void Shoot(Bullet zProjectilePrefab, GameObject zTarget = null)
     {

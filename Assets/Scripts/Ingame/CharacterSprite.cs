@@ -3,6 +3,7 @@ using System.Collections;
 
 public class CharacterSprite : MonoBehaviour
 {
+    [HideInInspector]
     public SpriteRenderer Renderer;
     public Sprite[] Sprites;
 
