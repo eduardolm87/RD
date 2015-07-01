@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
 
     float damageWithSpeedFactor = 80;
 
+    public bool Dead = false;
 
     #region internal
 
@@ -57,7 +58,14 @@ public class Player : MonoBehaviour
     InputState previousState = InputState.NOTPRESSED;
 
 
+    public Rigidbody2D Rigidbody;
+
     #endregion
+
+    void Awake()
+    {
+        Rigidbody = GetComponent<Rigidbody2D>();
+    }
 
     void Start()
     {
@@ -92,6 +100,8 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
+        if (Dead)
+            return;
 
         Monster _monster = other.collider.GetComponent<Monster>();
         if (_monster != null)
@@ -109,7 +119,7 @@ public class Player : MonoBehaviour
                 //Receive damage from monster
                 _monster.AttackPlayer();
                 _monster.PauseForAMoment(1);
-                GetComponent<Rigidbody2D>().velocity = (_monster.transform.position - transform.position);
+                Rigidbody.velocity = (_monster.transform.position - transform.position);
                 Mode = Modes.OUTOFCONTROL;
 
                 int _damageReceived = 1;
@@ -126,6 +136,9 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if (Dead)
+            return;
+
         if (GameManager.Instance.currentlyLoadedStage.Goal == Stage.StageGoals.ReachToCertainPoint)
         {
             if (other == GameManager.Instance.currentlyLoadedStage.PlaceToReach)
@@ -135,7 +148,6 @@ public class Player : MonoBehaviour
             }
         }
     }
-
 
     public void LoadHero(Hero zHero)
     {
@@ -148,7 +160,6 @@ public class Player : MonoBehaviour
 
         //Upgrades (later)
     }
-
 
     float DamageBonusOfSpeed(float relativeSpeed)
     {
@@ -218,10 +229,9 @@ public class Player : MonoBehaviour
         return result;
     }
 
-
     void OutOfControl()
     {
-        if (GetComponent<Rigidbody2D>().velocity.sqrMagnitude < lowspeedThreshold)
+        if (Rigidbody.velocity.sqrMagnitude < lowspeedThreshold)
         {
             if (Time.time - lowspdTr_time > 0.5)
             {
@@ -232,7 +242,7 @@ public class Player : MonoBehaviour
         {
             lowspdTr_time = Time.time;
 
-            if (Time.time - smokeRunTime > 0.18f)
+            if (!Dead && Time.time - smokeRunTime > 0.18f)
             {
                 GameManager.Instance.Effects.SmallSmoke(transform.position);
                 smokeRunTime = Time.time;
@@ -242,7 +252,7 @@ public class Player : MonoBehaviour
 
     void Charge(float angle, float strength)
     {
-        GetComponent<Rigidbody2D>().velocity = AimHUD.GetDirection() * strength * AccumulatedPower;
+        Rigidbody.velocity = AimHUD.GetDirection() * strength * AccumulatedPower;
 
         ChangeMode(Modes.OUTOFCONTROL);
 
@@ -263,8 +273,8 @@ public class Player : MonoBehaviour
 
     void DragStop()
     {
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        GetComponent<Rigidbody2D>().angularVelocity = 0;
+        Rigidbody.velocity = Vector2.zero;
+        Rigidbody.angularVelocity = 0;
 
 
         _monstersCollidedWith.Clear();
@@ -282,7 +292,7 @@ public class Player : MonoBehaviour
                 break;
 
             default:
-                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                Rigidbody.velocity = Vector2.zero;
                 ChangeMode(Modes.AIMING);
                 break;
         }
@@ -291,7 +301,7 @@ public class Player : MonoBehaviour
 
     public void Combat(Monster monster, float DamageBonus)
     {
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        Rigidbody.velocity = Vector2.zero;
         _monstersCollidedWith.Add(monster);
 
         if (!monster.Attributes.Alterations.Contains(Alteration.NonPushable))
@@ -374,8 +384,6 @@ public class Player : MonoBehaviour
         }
     }
 
-
-
     void PauseButton()
     {
         GameManager.Instance.GamePaused = true;
@@ -404,7 +412,7 @@ public class Player : MonoBehaviour
         {
             //Mobile objects
             GameManager.Instance.SoundManager.Play("BumpWithOtherRigidbodies");
-            GetComponent<Rigidbody2D>().velocity /= 4;
+            Rigidbody.velocity /= 4;
         }
 
         Rubber _rubber = other.GetComponent<Rubber>();
@@ -412,9 +420,9 @@ public class Player : MonoBehaviour
         if (_rubber != null)
         {
             //Rubber
-            if (_rubber._inflatedStg == 0 && GetComponent<Rigidbody2D>().velocity.sqrMagnitude < 500 && GetComponent<Rigidbody2D>().velocity.sqrMagnitude > 4)
+            if (_rubber._inflatedStg == 0 && Rigidbody.velocity.sqrMagnitude < 500 && Rigidbody.velocity.sqrMagnitude > 4)
             {
-                GetComponent<Rigidbody2D>().velocity *= 1.25f;
+                Rigidbody.velocity *= 1.25f;
             }
             GameManager.Instance.SoundManager.Play("BumpWithRubber");
         }
@@ -461,9 +469,16 @@ public class Player : MonoBehaviour
         else
         {
             //Repel damage
-            GetComponent<Rigidbody2D>().velocity = (-GetComponent<Rigidbody2D>().velocity.normalized) * 5;
+            Rigidbody.velocity = (-Rigidbody.velocity.normalized) * 5;
             AccumulatedPower = 0;
         }
+    }
+
+    public void Knockback(Vector2 zKnockback)
+    {
+        ChangeMode(Modes.OUTOFCONTROL);
+
+        Rigidbody.velocity = zKnockback;
     }
 
     public void Die()
@@ -472,9 +487,18 @@ public class Player : MonoBehaviour
 
         GameManager.Instance.Effects.Smoke(transform.position);
 
-        GetComponent<Renderer>().enabled = false;
+        CharSprite.Renderer.enabled = false;
 
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        Rigidbody.velocity = Vector2.zero;
+
+        Dead = true;
+
+        Collider.enabled = false;
+
+        Vector3 position = GameCamera.Instance.transform.position;
+        GameCamera.Instance.transform.parent = GameManager.Instance.currentlyLoadedStage.transform;
+        GameCamera.Instance.transform.rotation = Quaternion.identity;
+        GameCamera.Instance.transform.position = position;
 
         Invoke("DieActivate", 1);
     }

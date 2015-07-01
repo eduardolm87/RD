@@ -5,6 +5,8 @@ public class Damage : MonoBehaviour
 {
     public int Quantity = 999;
 
+    public int Knockback = 0;
+
     void OnTriggerEnter2D(Collider2D other)
     {
         Monster _monster = other.GetComponent<Monster>();
@@ -17,7 +19,16 @@ public class Damage : MonoBehaviour
         Player _player = other.GetComponent<Player>();
         if (_player != null)
         {
-            _player.Damage(Quantity);
+            if (Quantity != 0)
+            {
+                _player.Damage(Quantity);
+            }
+
+            if (Knockback != 0)
+            {
+                _player.Knockback((_player.transform.position - transform.position).normalized * Knockback);
+            }
+
             return;
         }
 

@@ -21,6 +21,9 @@ public class GameCamera : MonoBehaviour
 
     public void Restore()
     {
+        if (GameManager.Instance.currentPlayer.Dead)
+            return;
+
         transform.localPosition = originalLocalPosition;
         CancelInvoke();
     }

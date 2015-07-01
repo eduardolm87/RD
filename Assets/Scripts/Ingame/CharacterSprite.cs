@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CharacterSprite : MonoBehaviour
 {
-    SpriteRenderer Renderer;
+    public SpriteRenderer Renderer;
     public Sprite[] Sprites;
 
     int currentlyAppliedSprite = 0;
