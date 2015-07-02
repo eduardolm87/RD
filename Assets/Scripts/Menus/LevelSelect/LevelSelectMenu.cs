@@ -8,24 +8,16 @@ using UnityEngine.UI;
 public class LevelSelectMenu : MonoBehaviour
 {
     [SerializeField]
-    public LevelTheatre Theatre;
-
-    [SerializeField]
     public PCStats PCStats;
 
+    [SerializeField]
+    public Mapcontrol Map;
 
     private Stage CurrentStage = null;
 
     [HideInInspector]
     public int CurrentStageIndex = 0;
 
-    bool AcceptInput { get { return !Theatre.Curtains.Busy; } }
-
-    //void OnEnable()
-    //{
-    //    if (TitleScreen.TitleScreenShown)
-    //        Open();
-    //}
 
     public void Open(Stage zStageToLoad = null)
     {
@@ -44,8 +36,7 @@ public class LevelSelectMenu : MonoBehaviour
     void LoadCurrentStage()
     {
         PCStats.Load();
-
-        StartCoroutine(Theatre.Load(CurrentStage, CurrentStageIndex));
+        Map.Open();
     }
 
     public void Close()
@@ -55,17 +46,11 @@ public class LevelSelectMenu : MonoBehaviour
 
     public void StartGame()
     {
-        if (!AcceptInput)
-            return;
-
         GameManager.Instance.StartCoroutine(GameManager.Instance.LoadStage(CurrentStage));
     }
 
     public void ArrowFwd()
     {
-        if (!AcceptInput)
-            return;
-
         CurrentStageIndex++;
 
         if (CurrentStageIndex >= GameManager.Instance.Run.UnlockedStages.Count)
@@ -81,9 +66,6 @@ public class LevelSelectMenu : MonoBehaviour
 
     public void ArrowBck()
     {
-        if (!AcceptInput)
-            return;
-
         CurrentStageIndex--;
 
         if (CurrentStageIndex < 0)
@@ -99,9 +81,6 @@ public class LevelSelectMenu : MonoBehaviour
 
     public void HomeButton()
     {
-        if (!AcceptInput)
-            return;
-
         GameManager.Instance.BackFromSelectToTitle();
     }
 

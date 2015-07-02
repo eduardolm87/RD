@@ -247,8 +247,6 @@ public class GameManager : MonoBehaviour
 
         //Play music
 
-        LevelSelectMenu.Theatre.Curtains.InstantClose();
-
         ChangeWindow(SelectStageWindow);
 
         OpenLastOrCurrentStage();
