@@ -19,10 +19,15 @@ public class Mapnavigator : MonoBehaviour
                 if (state == States.IDLE)
                 {
                     GameManager.Instance.LevelSelectMenu.Map.NavigationInterface.Show(CurrentStep.GetAvailableDirections());
+                    if (CurrentStep.State == MapStep.Access.VISITABLE)
+                    {
+                        GameManager.Instance.LevelSelectMenu.StageInfo.ShowControls();
+                    }
                 }
                 else
                 {
                     GameManager.Instance.LevelSelectMenu.Map.NavigationInterface.Hide();
+                    GameManager.Instance.LevelSelectMenu.StageInfo.HideControls();
                 }
             }
         }
@@ -38,11 +43,22 @@ public class Mapnavigator : MonoBehaviour
 
     public void SetOnStep(MapStep zStep)
     {
+        if (zStep == null)
+        {
+            Debug.LogError("Error: Location not found");
+            return;
+        }
+
         float z = transform.position.z;
         transform.position = new Vector3(zStep.transform.position.x, zStep.transform.position.y + Renderer.bounds.size.y / 2, z);
 
         CurrentStep = zStep;
         State = States.IDLE;
+
+        if (IsPlayer && CurrentStep.State == MapStep.Access.VISITABLE)
+        {
+            GameManager.Instance.LevelSelectMenu.Map.ShowStageInfo(CurrentStep);
+        }
     }
 
     public void TryGo(MapStep.Directions zDirection)
@@ -80,7 +96,10 @@ public class Mapnavigator : MonoBehaviour
 
         State = States.IDLE;
 
-        //To-Do: Mostrar los cambios de la nueva pantalla a la que acabas de llegar aqui.
+        if (IsPlayer && CurrentStep.State == MapStep.Access.VISITABLE)
+        {
+            GameManager.Instance.LevelSelectMenu.Map.ShowStageInfo(CurrentStep);
+        }
     }
 
     MapStep GetNextMapStep(MapStep zOrigin, MapStep zPrevious, MapStep.Directions zCurrentDirection)

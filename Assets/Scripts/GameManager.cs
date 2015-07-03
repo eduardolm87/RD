@@ -258,27 +258,6 @@ public class GameManager : MonoBehaviour
             LevelSelectMenu.Open(Run.UnlockedStages.FirstOrDefault(s => s.name == lastLoadedStagePrefab.name));
         else
             LevelSelectMenu.Open();
-
-        //bool openCurrent = false;
-        //if (lastLoadedStagePrefab != null && Run.UnlockedStages.Count >= 2)
-        //{
-        //    int justPlayedIndex = Run.GetStageIndex(lastLoadedStagePrefab);
-        //    int lastStageIndex = Run.GetStageIndex(Run.UnlockedStages[Run.UnlockedStages.Count - 2]);
-
-        //    if (justPlayedIndex < lastStageIndex)
-        //    {
-        //        openCurrent = true;
-        //    }
-        //}
-
-        //if (openCurrent)
-        //{
-        //    LevelSelectMenu.Open(Run.UnlockedStages.FirstOrDefault(s => s.name == lastLoadedStagePrefab.name));
-        //}
-        //else
-        //{
-        //    LevelSelectMenu.Open();
-        //}
     }
 
     void DestroyCurrentScene()

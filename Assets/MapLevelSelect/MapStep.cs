@@ -18,6 +18,8 @@ public class MapStep : MonoBehaviour
     public Access State = Access.TRANSIT;
     public List<Path> Paths = new List<Path>();
 
+    public Stage Stage;
+
     public List<Directions> GetAvailableDirections()
     {
         return Paths.ConvertAll(p => p.Direction).Distinct().ToList();
