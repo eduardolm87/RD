@@ -132,6 +132,23 @@ public class Mapcontrol : MonoBehaviour
                     path.Unlocked = false;
             });
         }
+
+        //Transition mapsteps
+        MapSteps.ForEach(step =>
+        {
+            if (step.State == MapStep.Access.TRANSIT)
+            {
+
+                if (step.Paths.Any(p => PathsUnlocked.Any(q => q.Graphic == p.Graphic)))
+                {
+                    step.Show(0);
+                }
+                else
+                {
+                    step.Hide();
+                }
+            }
+        });
     }
 
     IEnumerator ShowLatestMapStep(bool showCinematic)

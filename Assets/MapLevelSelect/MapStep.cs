@@ -67,7 +67,6 @@ public class MapStep : MonoBehaviour
 
     public List<Directions> GetAvailableDirections()
     {
-        Debug.Log("Mis availabledirections de " + name + " son: " + string.Join(",", Paths.ConvertAll(p => p.Direction.ToString() + " - Unlocked: " + p.Unlocked.ToString()).ToArray()));
         return Paths.Where(k => k.Unlocked).ToList().ConvertAll(p => p.Direction).Distinct().ToList();
     }
 
