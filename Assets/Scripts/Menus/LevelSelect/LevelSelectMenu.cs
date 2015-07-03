@@ -49,4 +49,9 @@ public class LevelSelectMenu : MonoBehaviour
     {
         GameManager.Instance.BackFromSelectToTitle();
     }
+
+    public void SelectStage(Stage zStage)
+    {
+        CurrentStage = zStage;
+    }
 }

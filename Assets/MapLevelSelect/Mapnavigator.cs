@@ -57,7 +57,7 @@ public class Mapnavigator : MonoBehaviour
 
         if (IsPlayer && CurrentStep.State == MapStep.Access.VISITABLE)
         {
-            GameManager.Instance.LevelSelectMenu.Map.ShowStageInfo(CurrentStep);
+            GameManager.Instance.LevelSelectMenu.Map.SelectStage(CurrentStep);
         }
     }
 
@@ -98,7 +98,7 @@ public class Mapnavigator : MonoBehaviour
 
         if (IsPlayer && CurrentStep.State == MapStep.Access.VISITABLE)
         {
-            GameManager.Instance.LevelSelectMenu.Map.ShowStageInfo(CurrentStep);
+            GameManager.Instance.LevelSelectMenu.Map.SelectStage(CurrentStep);
         }
     }
 

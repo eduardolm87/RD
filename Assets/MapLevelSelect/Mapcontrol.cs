@@ -38,9 +38,10 @@ public class Mapcontrol : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void ShowStageInfo(MapStep zStep)
+    public void SelectStage(MapStep zStep)
     {
         GameManager.Instance.LevelSelectMenu.StageInfo.LoadInfo(zStep.Stage);
+        GameManager.Instance.LevelSelectMenu.SelectStage(zStep.Stage);
     }
 
     public MapStep GetMapstepFromStage(Stage zStage)
