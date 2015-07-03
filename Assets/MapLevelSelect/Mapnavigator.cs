@@ -14,11 +14,11 @@ public class Mapnavigator : MonoBehaviour
         set
         {
             state = value;
-            if (IsPlayer && GameManager.Instance.LevelSelectMenu.Map.NavigationInterface != null)
+            if (IsPlayer && CurrentStep != null && GameManager.Instance.LevelSelectMenu.Map.NavigationInterface != null)
             {
                 if (state == States.IDLE)
                 {
-                    GameManager.Instance.LevelSelectMenu.Map.NavigationInterface.Show();
+                    GameManager.Instance.LevelSelectMenu.Map.NavigationInterface.Show(CurrentStep.GetAvailableDirections());
                 }
                 else
                 {
