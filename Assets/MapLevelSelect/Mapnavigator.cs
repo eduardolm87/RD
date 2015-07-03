@@ -149,25 +149,5 @@ public class Mapnavigator : MonoBehaviour
         yield return new WaitForSeconds(time);
     }
 
-    //Debug: mejor leer de arrows
-    void Update()
-    {
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            TryGo(MapStep.Directions.DOWN);
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            TryGo(MapStep.Directions.UP);
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            TryGo(MapStep.Directions.LEFT);
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            TryGo(MapStep.Directions.RIGHT);
-        }
-    }
 }
