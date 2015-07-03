@@ -67,6 +67,7 @@ public class MapStep : MonoBehaviour
 
     public List<Directions> GetAvailableDirections()
     {
+        Debug.Log("Mis availabledirections de " + name + " son: " + string.Join(",", Paths.ConvertAll(p => p.Direction.ToString() + " - Unlocked: " + p.Unlocked.ToString()).ToArray()));
         return Paths.Where(k => k.Unlocked).ToList().ConvertAll(p => p.Direction).Distinct().ToList();
     }
 
@@ -76,7 +77,7 @@ public class MapStep : MonoBehaviour
         {
             Graphic.SetActive(true);
 
-            if (zTime>0)
+            if (zTime > 0)
                 iTween.ScaleFrom(Graphic, iTween.Hash("y", 0, "time", zTime, "easetype", iTween.EaseType.easeOutElastic));
         }
 
@@ -84,7 +85,7 @@ public class MapStep : MonoBehaviour
         {
             Base.enabled = true;
 
-            if (zTime>0)
+            if (zTime > 0)
                 iTween.ScaleFrom(Base.gameObject, iTween.Hash("x", 0, "time", zTime * 0.66f, "easetype", iTween.EaseType.easeOutBounce));
         }
     }

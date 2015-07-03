@@ -10,6 +10,7 @@ public class MapArrows : MonoBehaviour
 
     public void Show(List<MapStep.Directions> zDirections)
     {
+        Debug.Log("Estoy en " + GameManager.Instance.LevelSelectMenu.Map.PlayerNavigator.CurrentStep.name + " y las direcciones posibles son " + string.Join(",", zDirections.ConvertAll(d => d.ToString()).ToArray()));
         gameObject.SetActive(true);
         SetDirections(zDirections);
     }

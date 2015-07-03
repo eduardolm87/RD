@@ -99,6 +99,8 @@ public class GameManager : MonoBehaviour
 
         Progress.ReadProgress();
 
+        LevelSelectMenu.Map.NewestStage = Run.GetLastUnlockedStage();
+
         ChangeWindow(TitleScreenWindow);
     }
 
@@ -180,7 +182,7 @@ public class GameManager : MonoBehaviour
         GameCamera cam = GameObject.FindObjectOfType<GameCamera>();
         Transform cameraParent = cam.transform.parent;
         cam.transform.parent = null;
-       
+
         yield return new WaitForSeconds(0.15f);
         SoundManager.Play("BumpWithOtherRigidbodies");
         yield return new WaitForSeconds(0.45f);
@@ -188,7 +190,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         SoundManager.Play("BumpWithOtherRigidbodies");
         yield return new WaitForSeconds(0.2f);
-        
+
 
 
         currentPlayer.Collider.enabled = true;
@@ -255,9 +257,13 @@ public class GameManager : MonoBehaviour
     void OpenLastOrCurrentStage()
     {
         if (lastLoadedStagePrefab != null)
-            LevelSelectMenu.Open(Run.UnlockedStages.FirstOrDefault(s => s.name == lastLoadedStagePrefab.name));
+        {
+            LevelSelectMenu.Open(lastLoadedStagePrefab);
+        }
         else
+        {
             LevelSelectMenu.Open();
+        }
     }
 
     void DestroyCurrentScene()

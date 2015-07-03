@@ -13,7 +13,8 @@ public class Mapcontrol : MonoBehaviour
 
     private List<MapStep> MapSteps;
 
-    private Stage NewestStage = null;
+    [HideInInspector]
+    public Stage NewestStage = null;
 
     bool ShowNewCinematic = false;
 
@@ -116,7 +117,6 @@ public class Mapcontrol : MonoBehaviour
                     else
                     {
                         path.Unlocked = false;
-
                     }
                 }
             });

@@ -30,19 +30,23 @@ public class LevelSelectMenu : MonoBehaviour
 
     public void Open(Stage zStageToLoad = null)
     {
-        gameObject.SetActive(true);
-
         if (zStageToLoad == null)
         {
             CurrentStage = GameManager.Instance.Run.GetLastUnlockedStage();
         }
+        else
+        {
+            CurrentStage = zStageToLoad;
+        }
 
+        gameObject.SetActive(true);
         LoadCurrentStage();
     }
 
     void LoadCurrentStage()
     {
         PCStats.Load();
+
         Map.Open(CurrentStage);
     }
 
@@ -70,5 +74,7 @@ public class LevelSelectMenu : MonoBehaviour
     public void SelectStage(Stage zStage)
     {
         CurrentStage = zStage;
+        GameManager.Instance.lastLoadedStagePrefab = zStage;
+        GameManager.Instance.Progress.SaveLastVisitedStage();
     }
 }

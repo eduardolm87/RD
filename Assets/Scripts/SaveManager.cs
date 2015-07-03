@@ -59,6 +59,7 @@ public class SaveManager : MonoBehaviour
     const string K_CurrentHero = "K_C_Hero";
     const string K_Settings_Music = "K_Settings_Music";
     const string K_Settings_SFX = "K_Settings_SFX";
+    const string K_LastVisitedStage = "K_LastVisitedStage";
 
 
     const string Tag_Name = "name";
@@ -81,6 +82,8 @@ public class SaveManager : MonoBehaviour
 
         ReadStages();
 
+        ReadLastVisitedStage();
+
         ReadSettings();
     }
 
@@ -90,9 +93,19 @@ public class SaveManager : MonoBehaviour
 
         SaveStages();
 
+        SaveLastVisitedStage();
+
         SaveSettings();
 
         SaveVersion();
+    }
+
+    public void SaveLastVisitedStage()
+    {
+        if (GameManager.Instance.lastLoadedStagePrefab != null)
+        {
+            PlayerPrefs.SetString(K_LastVisitedStage, GameManager.Instance.lastLoadedStagePrefab.name);
+        }
     }
 
     public void ResetAll()
@@ -130,6 +143,19 @@ public class SaveManager : MonoBehaviour
         Debug.Log("Created data for the first time");
     }
 
+    void ReadLastVisitedStage()
+    {
+        if (PlayerPrefs.HasKey(K_LastVisitedStage))
+        {
+            string lastVisitedStageName = PlayerPrefs.GetString(K_LastVisitedStage);
+
+            Stage lastVisitedStage = GameManager.Instance.Run.UnlockedStages.FirstOrDefault(s => s.name == lastVisitedStageName);
+            if (lastVisitedStage != null)
+            {
+                GameManager.Instance.lastLoadedStagePrefab = lastVisitedStage;
+            }
+        }
+    }
 
     void ReadStages()
     {
