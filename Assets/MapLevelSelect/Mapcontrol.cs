@@ -7,12 +7,19 @@ public class Mapcontrol : MonoBehaviour
 {
     public Mapnavigator PlayerNavigator;
 
+    public Camera MapCamera;
+
     public MapArrows NavigationInterface;
 
-
-
-
     private List<MapStep> MapSteps;
+
+    private Stage NewestStage = null;
+
+    bool ShowNewCinematic = false;
+
+    [SerializeField]
+    private GameObject NewIndication;
+
     bool Initialized = false;
 
     void Initialization()
@@ -42,11 +49,15 @@ public class Mapcontrol : MonoBehaviour
 
     public void SelectStage(MapStep zStep)
     {
-        GameManager.Instance.LevelSelectMenu.StageInfo.LoadInfo(zStep.Stage);
         GameManager.Instance.LevelSelectMenu.SelectStage(zStep.Stage);
 
+        ShowNewCinematic = GameManager.Instance.Run.UnlockedStages.Count > 1 && NewestStage != GameManager.Instance.Run.GetLastUnlockedStage();
+
+        NewestStage = GameManager.Instance.Run.GetLastUnlockedStage();
+
         RefreshPaths();
-        GameManager.Instance.LevelSelectMenu.Map.NavigationInterface.Show(PlayerNavigator.CurrentStep.GetAvailableDirections());
+
+        StartCoroutine(ShowLatestMapStep(ShowNewCinematic));
     }
 
     public MapStep GetMapstepFromStage(Stage zStage)
@@ -59,8 +70,18 @@ public class Mapcontrol : MonoBehaviour
         //Unlock maps
         List<MapStep> UnlockedLocations = MapSteps.Where(m => GameManager.Instance.Run.UnlockedStages.Contains(m.Stage)).ToList();
         List<MapStep> LockedLocations = MapSteps.Where(m => m.Stage != null && m.State != MapStep.Access.TRANSIT && !GameManager.Instance.Run.UnlockedStages.Contains(m.Stage)).ToList();
-        UnlockedLocations.ForEach(map => map.State = MapStep.Access.VISITABLE);
-        LockedLocations.ForEach(map => map.State = MapStep.Access.LOCKED);
+        UnlockedLocations.ForEach(map =>
+        {
+            map.State = MapStep.Access.VISITABLE;
+            if (!ShowNewCinematic || NewestStage != map.Stage)
+                map.Show(0);
+        });
+
+        LockedLocations.ForEach(map =>
+        {
+            map.State = MapStep.Access.LOCKED;
+            map.Hide();
+        });
 
         List<MapStep.Path> PathsUnlocked = new List<MapStep.Path>();
         foreach (MapStep mapStep in UnlockedLocations)
@@ -113,4 +134,63 @@ public class Mapcontrol : MonoBehaviour
         }
     }
 
+    IEnumerator ShowLatestMapStep(bool showCinematic)
+    {
+        if (showCinematic)
+        {
+            if (NewestStage == null)
+            {
+                Debug.LogError("Error getting the newest stage.");
+                yield break;
+            }
+            MapStep mapStep = MapSteps.FirstOrDefault(m => m.Stage == NewestStage);
+            if (mapStep == null)
+            {
+                Debug.LogError("Error getting the newest stage in the map.");
+            }
+
+            GameManager.Instance.LevelSelectMenu.StageInfo.LoadInfo(NewestStage);
+
+            mapStep.Hide();
+
+            Vector3 MapStepPosition = new Vector3(mapStep.transform.position.x, mapStep.transform.position.y, MapCamera.transform.position.z);
+            yield return StartCoroutine(MoveCameraToPoint(MapStepPosition, 0.5f));
+
+            //Particles & stuff
+            MapStepPosition.z = 0.25f;
+
+            NewIndication.transform.position = MapStepPosition + Vector3.up;
+            yield return null;
+
+            NewIndication.SetActive(true);
+            iTween.ScaleFrom(NewIndication, iTween.Hash("scale", Vector3.zero, "time", 0.5f));
+            iTween.MoveTo(NewIndication, iTween.Hash("position", MapStepPosition + (Vector3.up * 2), "time", 0.5f));
+
+            GameManager.Instance.Effects.Smoke(MapStepPosition);
+            yield return new WaitForSeconds(0.1f);
+
+            GameManager.Instance.SoundManager.Play("UnlockNewStage");
+
+            mapStep.Show(0.66f);
+
+            yield return new WaitForSeconds(1.5f);
+            //
+
+
+            MapStepPosition = new Vector3(PlayerNavigator.transform.position.x, PlayerNavigator.transform.position.y, MapCamera.transform.position.z);
+            yield return StartCoroutine(MoveCameraToPoint(MapStepPosition, 0.5f));
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        NewIndication.SetActive(false);
+        GameManager.Instance.LevelSelectMenu.StageInfo.LoadInfo(PlayerNavigator.CurrentStep.Stage);
+        GameManager.Instance.LevelSelectMenu.Map.NavigationInterface.Show(PlayerNavigator.CurrentStep.GetAvailableDirections());
+    }
+
+    IEnumerator MoveCameraToPoint(Vector3 zPoint, float zTime)
+    {
+        iTween.MoveTo(MapCamera.gameObject, iTween.Hash("position", zPoint, "time", zTime, "easetype", iTween.EaseType.easeOutCubic));
+        yield return new WaitForSeconds(zTime);
+    }
 }

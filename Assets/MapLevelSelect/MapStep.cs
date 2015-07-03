@@ -52,13 +52,49 @@ public class MapStep : MonoBehaviour
     public enum Access { UNKNOWN, TRANSIT, VISITABLE, LOCKED };
     public enum Directions { NONE, DOWN, RIGHT, UP, LEFT };
 
+    public Stage Stage;
+    public GameObject Graphic;
     public Access State = Access.TRANSIT;
     public List<Path> Paths = new List<Path>();
 
-    public Stage Stage;
+    [HideInInspector]
+    public SpriteRenderer Base;
+
+    void Awake()
+    {
+        Base = GetComponent<SpriteRenderer>();
+    }
 
     public List<Directions> GetAvailableDirections()
     {
         return Paths.Where(k => k.Unlocked).ToList().ConvertAll(p => p.Direction).Distinct().ToList();
+    }
+
+    public void Show(float zTime)
+    {
+        if (Graphic != null)
+        {
+            Graphic.SetActive(true);
+
+            if (zTime>0)
+                iTween.ScaleFrom(Graphic, iTween.Hash("y", 0, "time", zTime, "easetype", iTween.EaseType.easeOutElastic));
+        }
+
+        if (Base != null)
+        {
+            Base.enabled = true;
+
+            if (zTime>0)
+                iTween.ScaleFrom(Base.gameObject, iTween.Hash("x", 0, "time", zTime * 0.66f, "easetype", iTween.EaseType.easeOutBounce));
+        }
+    }
+
+    public void Hide()
+    {
+        if (Graphic != null)
+            Graphic.SetActive(false);
+
+        if (Base != null)
+            Base.enabled = false;
     }
 }

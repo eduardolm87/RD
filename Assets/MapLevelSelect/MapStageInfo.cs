@@ -10,6 +10,9 @@ public class MapStageInfo : MonoBehaviour
     private GameObject BottomBar;
 
     [SerializeField]
+    private GameObject HeaderBar;
+
+    [SerializeField]
     private Text StageName;
 
     [SerializeField]
@@ -35,23 +38,44 @@ public class MapStageInfo : MonoBehaviour
         GoButton.gameObject.SetActive(true);
         StageDifficulty.gameObject.SetActive(true);
 
-        GoButton.transform.localScale = Vector3.one;
-        iTween.ScaleFrom(GoButton.gameObject, iTween.Hash("scale", Vector3.zero, "delay", 0.1f, "time", 0.25f, "easetype", iTween.EaseType.easeOutBounce));
-        BottomBar.SetActive(true);
+        //GoButton.transform.localScale = Vector3.one;
+        //iTween.ScaleFrom(GoButton.gameObject, iTween.Hash("scale", Vector3.zero, "delay", 0.1f, "time", 0.25f, "easetype", iTween.EaseType.easeOutBounce));
 
+        BottomBar.SetActive(true);
         BottomBar.transform.localScale = Vector3.one;
-        iTween.ScaleFrom(BottomBar, iTween.Hash("y", 0, "time", 0.1f, "easetype", iTween.EaseType.easeOutBounce));
+        iTween.ScaleFrom(BottomBar, iTween.Hash("y", 0, "time", 0.25f, "easetype", iTween.EaseType.easeOutBounce));
+
+        HeaderBar.SetActive(true);
+        HeaderBar.transform.localScale = Vector3.one;
+        iTween.ScaleFrom(HeaderBar, iTween.Hash("y", 0, "time", 0.25f, "easetype", iTween.EaseType.easeOutBounce));
 
         StageName.enabled = true;
     }
 
+    bool busy = false;
     public void HideControls()
+    {
+        if (busy)
+            return;
+
+        iTween.ScaleTo(BottomBar, iTween.Hash("y", 0, "time", 0.25f, "easetype", iTween.EaseType.easeOutBounce));
+        iTween.ScaleTo(HeaderBar, iTween.Hash("y", 0, "time", 0.25f, "easetype", iTween.EaseType.easeOutBounce));
+
+        busy = true;
+        Invoke("EndOfHideControls", 0.25f);
+    }
+
+    void EndOfHideControls()
     {
         GoButton.gameObject.SetActive(false);
         StageDifficulty.gameObject.SetActive(false);
 
         BottomBar.SetActive(false);
 
+        HeaderBar.SetActive(false);
+
         StageName.enabled = false;
+
+        busy = false;
     }
 }

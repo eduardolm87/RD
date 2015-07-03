@@ -17,6 +17,17 @@ public class LevelSelectMenu : MonoBehaviour
 
     private Stage CurrentStage = null;
 
+    public bool InputAccepted
+    {
+        get
+        {
+            if (Map.PlayerNavigator.State != Mapnavigator.States.IDLE)
+                return false;
+
+            return true;
+        }
+    }
+
     public void Open(Stage zStageToLoad = null)
     {
         gameObject.SetActive(true);
@@ -42,11 +53,17 @@ public class LevelSelectMenu : MonoBehaviour
 
     public void StartGame()
     {
+        if (!InputAccepted)
+            return;
+
         GameManager.Instance.StartCoroutine(GameManager.Instance.LoadStage(CurrentStage));
     }
 
     public void HomeButton()
     {
+        if (!InputAccepted)
+            return;
+
         GameManager.Instance.BackFromSelectToTitle();
     }
 

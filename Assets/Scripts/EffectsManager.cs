@@ -14,7 +14,7 @@ public class EffectsManager : MonoBehaviour
     #region Smoke
     public GameObject ObjSmoke;
     Queue<GameObject> _smokes = new Queue<GameObject>();
-    public void Smoke(Vector2 spawnPosition)
+    public void Smoke(Vector3 spawnPosition)
     {
         _smokes.Enqueue(GameObject.Instantiate(ObjSmoke, spawnPosition, Quaternion.identity) as GameObject);
         Invoke("Smoke_Off", 0.3f);
