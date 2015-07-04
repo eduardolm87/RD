@@ -87,6 +87,8 @@ public class Mapnavigator : MonoBehaviour
 
         int steps = 0;
 
+
+
         do
         {
             steps++;
@@ -98,14 +100,13 @@ public class Mapnavigator : MonoBehaviour
             {
                 break;
             }
-            
+
+            if (CurrentStep.transform.position.x < nextStep.transform.position.x - 1)
+                Reorientate(MapStep.Directions.LEFT);
+            else if (CurrentStep.transform.position.x > nextStep.transform.position.x + 1)
+                Reorientate(MapStep.Directions.RIGHT);
 
             yield return StartCoroutine(MoveToStep(nextStep));
-
-            if (CurrentStep.transform.position.x < nextStep.transform.position.x)
-                Reorientate(MapStep.Directions.RIGHT);
-            else if (CurrentStep.transform.position.x > nextStep.transform.position.x)
-                Reorientate(MapStep.Directions.LEFT);
 
             previousStep = CurrentStep;
             CurrentStep = nextStep;
