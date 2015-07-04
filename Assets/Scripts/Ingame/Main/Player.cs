@@ -111,6 +111,8 @@ public class Player : MonoBehaviour
                 if (!_monstersCollidedWith.Contains(_monster))
                 {
                     //Attack to monster
+                    GameManager.Instance.Effects.Hit(transform.position + ((other.transform.position - transform.position) / 2f));
+
                     Combat(_monster, DamageBonusOfSpeed(other.relativeVelocity.sqrMagnitude));
                 }
             }

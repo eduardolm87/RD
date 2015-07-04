@@ -87,11 +87,13 @@ public class Mapnavigator : MonoBehaviour
                 break;
             }
 
+            GameManager.Instance.SoundManager.Play("MoveOverworld");
             yield return StartCoroutine(MoveToStep(nextStep));
 
             previousStep = CurrentStep;
             CurrentStep = nextStep;
             CurrentDirection = MapStep.Directions.NONE;
+
         } while (CurrentStep.State == MapStep.Access.TRANSIT);
 
         State = States.IDLE;

@@ -42,6 +42,8 @@ public class Stage : MonoBehaviour
     public Collider2D PlaceToReach = null;
     public Monster EnemyToKill = null;
 
+    public AudioClip Music;
+
 
     [HideInInspector]
     public Dictionary<Transform, float> _previousIntertia = new Dictionary<Transform, float>();

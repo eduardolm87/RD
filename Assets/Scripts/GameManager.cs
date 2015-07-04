@@ -42,7 +42,6 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public Stage currentlyLoadedStage = null;
 
-
     [HideInInspector]
     public Stage lastLoadedStagePrefab = null;
 
@@ -145,6 +144,9 @@ public class GameManager : MonoBehaviour
         Curtain.Instance.Show();
         yield return new WaitForSeconds(Curtain.Instance.Duration);
         Curtain.Instance.Text.text = "Loading\n" + "<b>" + stg.Name + "</b>";
+
+        //Enter music
+        SoundManager.Play("EnterLevel");
         yield return new WaitForSeconds(2);
 
         //Load the stage
@@ -170,7 +172,15 @@ public class GameManager : MonoBehaviour
         //Update stats
         TimeRealplay = 0;
 
-        LoadRandomMusic();
+        //Music
+        if (currentlyLoadedStage.Music != null)
+        {
+            SoundManager.PlayMusic(currentlyLoadedStage.Music.name);
+        }
+        else
+        {
+            Debug.LogError("Stage " + currentlyLoadedStage.name + " has no music");
+        }
 
         //Curtain
         currentPlayer.Collider.enabled = false;

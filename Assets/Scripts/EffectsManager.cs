@@ -60,4 +60,27 @@ public class EffectsManager : MonoBehaviour
     }
 
     #endregion
+
+    #region Hit
+    public GameObject ObjHit;
+    Queue<GameObject> _hit = new Queue<GameObject>();
+    public void Hit(Vector3 spawnPosition)
+    {
+        spawnPosition.z = 0.5f;
+        GameObject newParticle = GameObject.Instantiate(ObjHit, spawnPosition, Quaternion.identity) as GameObject;
+        _hit.Enqueue(newParticle);
+
+        newParticle.transform.Rotate(Vector3.forward, Random.Range(0, 360));
+        newParticle.transform.localScale = Vector3.one * Random.Range(0.8f, 1f);
+
+        iTween.ScaleFrom(newParticle, iTween.Hash("scale", newParticle.transform.localScale * 0.5f, "time", 0.15f));
+        Invoke("Hit_Off", 0.3f);
+
+
+    }
+    void Hit_Off()
+    {
+        Destroy(_hit.Dequeue());
+    }
+    #endregion
 }

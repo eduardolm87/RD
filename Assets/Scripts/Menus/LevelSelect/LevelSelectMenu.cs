@@ -39,7 +39,10 @@ public class LevelSelectMenu : MonoBehaviour
             CurrentStage = zStageToLoad;
         }
 
+        GameManager.Instance.SoundManager.PlayMusic("Overworld01");
+
         gameObject.SetActive(true);
+
         LoadCurrentStage();
     }
 
