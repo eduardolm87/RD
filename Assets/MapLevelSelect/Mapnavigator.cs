@@ -38,8 +38,15 @@ public class Mapnavigator : MonoBehaviour
 
     public SpriteRenderer Renderer;
 
+    private Vector3 originalScale;
+
     [HideInInspector]
     public MapStep CurrentStep = null;
+
+    void Awake()
+    {
+        originalScale = transform.localScale;
+    }
 
     public void SetOnStep(MapStep zStep)
     {
@@ -78,17 +85,27 @@ public class Mapnavigator : MonoBehaviour
 
         State = States.MOVING;
 
+        int steps = 0;
+
         do
         {
+            steps++;
+            SoundDependingOnStep(steps);
+
             nextStep = GetNextMapStep(CurrentStep, previousStep, CurrentDirection);
 
             if (nextStep == null)
             {
                 break;
             }
+            
 
-            GameManager.Instance.SoundManager.Play("MoveOverworld");
             yield return StartCoroutine(MoveToStep(nextStep));
+
+            if (CurrentStep.transform.position.x < nextStep.transform.position.x)
+                Reorientate(MapStep.Directions.RIGHT);
+            else if (CurrentStep.transform.position.x > nextStep.transform.position.x)
+                Reorientate(MapStep.Directions.LEFT);
 
             previousStep = CurrentStep;
             CurrentStep = nextStep;
@@ -101,6 +118,18 @@ public class Mapnavigator : MonoBehaviour
         if (IsPlayer && CurrentStep.State == MapStep.Access.VISITABLE)
         {
             GameManager.Instance.LevelSelectMenu.Map.SelectStage(CurrentStep);
+        }
+    }
+
+    void SoundDependingOnStep(int zSteps)
+    {
+        if (zSteps < 2)
+        {
+            GameManager.Instance.SoundManager.Play("OverworldStartMoving");
+        }
+        else
+        {
+            GameManager.Instance.SoundManager.Play("MoveOverworld");
         }
     }
 
@@ -151,5 +180,18 @@ public class Mapnavigator : MonoBehaviour
         yield return new WaitForSeconds(time);
     }
 
+    public void Reorientate(MapStep.Directions zDirection)
+    {
+        switch (zDirection)
+        {
+            case MapStep.Directions.RIGHT:
+                Renderer.transform.localScale = new Vector3(originalScale.x, originalScale.y, originalScale.z);
+                break;
+
+            case MapStep.Directions.LEFT:
+                Renderer.transform.localScale = new Vector3(-originalScale.x, originalScale.y, originalScale.z);
+                break;
+        }
+    }
 
 }

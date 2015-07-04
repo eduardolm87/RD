@@ -489,7 +489,7 @@ public class Player : MonoBehaviour
         if (quantity > 0)
         {
             CharSprite.WinkInColor(GameManager.Instance.Effects.DamagedColor);
-            GameManager.Instance.Effects.Minitext(quantity.ToString(), GameManager.Instance.Effects.DamagedColor, ((Vector2)Camera.main.WorldToScreenPoint(transform.position) + Vector2.up * 20), gameObject);
+            GameManager.Instance.Effects.FloatingDmgText(quantity.ToString(), GameManager.Instance.Effects.DamagedColor, transform.position, gameObject);
             GameCamera.Instance.Shake();
 
         }

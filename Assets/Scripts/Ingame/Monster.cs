@@ -61,7 +61,7 @@ public class Monster : MonoBehaviour
             CharSprite.WinkInColor(GameManager.Instance.Effects.DamagedColor);
 
             if (!_resistDamage)
-                GameManager.Instance.Effects.Minitext(quantity.ToString(), Color.white, ((Vector2)Camera.main.WorldToScreenPoint(transform.position) + Vector2.up * 20), gameObject);
+                GameManager.Instance.Effects.FloatingDmgText(quantity.ToString(), Color.white, transform.position, gameObject);
 
             if (Brain != null)
             {

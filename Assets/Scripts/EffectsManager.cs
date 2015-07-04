@@ -42,21 +42,28 @@ public class EffectsManager : MonoBehaviour
     }
     #endregion
 
-    #region Minitext
+    #region FloatingDamage
     public Canvas GameCanvas;
-    public GameObject MinitextPrefab;
+    public FloatingDmgText FloatingDmgPrefab;
 
-    public void Minitext(string msg, Color msgColor, Vector2 position, GameObject attachTo = null)
+    public void FloatingDmgText(string msg, Color msgColor, Vector3 position, GameObject attachTo = null)
     {
-        GameObject _txtObj = Instantiate(MinitextPrefab, position, Quaternion.identity) as GameObject;
+        GameObject _txtObj = Instantiate(FloatingDmgPrefab.gameObject, position, Quaternion.identity) as GameObject;
         _txtObj.transform.parent = GameCanvas.transform;
 
-        Minitext _mtext = _txtObj.GetComponent<Minitext>();
-        _mtext.Text.text = msg;
-        _mtext.Text.color = msgColor;
-        _mtext.FollowObject = attachTo;
+        FloatingDmgText floatingText = _txtObj.GetComponent<FloatingDmgText>();
+        floatingText.Text.text = msg;
+        floatingText.Text.color = msgColor;
+        if (attachTo != null)
+        {
+            //floatingText.transform.SetParent(attachTo.transform);
+            //floatingText.transform.localPosition = new Vector3(0, 1, 0);
+        }
+        floatingText.transform.SetParent(GameManager.Instance.GameWindow.transform);
+        floatingText.transform.position = position;
+        floatingText.transform.localScale = FloatingDmgPrefab.transform.localScale;
 
-        _txtObj.GetComponent<Rigidbody2D>().velocity = Vector2.up * 50;
+        iTween.MoveTo(_txtObj, iTween.Hash("position", floatingText.transform.position + (Vector3.up * 0.75f), "time", 0.75f, "easetype", iTween.EaseType.easeOutBounce, "oncomplete", "EndOfTransition", "oncompletetarget", _txtObj));
     }
 
     #endregion
