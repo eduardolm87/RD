@@ -32,8 +32,6 @@ public class Mapcontrol : MonoBehaviour
 
     public void Open(Stage zStageToSet)
     {
-        GameManager.Instance.SoundManager.PlayMusic("Overworld01");
-
         gameObject.SetActive(true);
         if (!Initialized)
         {

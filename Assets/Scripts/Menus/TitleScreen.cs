@@ -36,18 +36,24 @@ public class TitleScreen : MonoBehaviour
     void Play()
     {
         Busy = false;
+
+        GameManager.Instance.SoundManager.Play("Confirm");
         GameManager.Instance.OpenStageSelect();
     }
 
     void Options()
     {
         Busy = false;
+
+        GameManager.Instance.SoundManager.Play("Confirm");
         GameManager.Instance.ChangeWindow(GameManager.Instance.OptionsWindow);
     }
 
     void Credits()
     {
         Busy = false;
+
+        GameManager.Instance.SoundManager.Play("Confirm");
         GameManager.Instance.ChangeWindow(GameManager.Instance.CreditsWindow);
     }
 

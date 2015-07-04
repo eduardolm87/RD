@@ -63,6 +63,8 @@ public class LevelSelectMenu : MonoBehaviour
         if (!InputAccepted)
             return;
 
+        GameManager.Instance.SoundManager.Play("Confirm");
+
         GameManager.Instance.StartCoroutine(GameManager.Instance.LoadStage(CurrentStage));
     }
 
@@ -70,6 +72,8 @@ public class LevelSelectMenu : MonoBehaviour
     {
         if (!InputAccepted)
             return;
+
+        GameManager.Instance.SoundManager.Play("Cancel");
 
         GameManager.Instance.BackFromSelectToTitle();
     }

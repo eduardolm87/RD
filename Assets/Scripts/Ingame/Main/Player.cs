@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
 
     float damageWithSpeedFactor = 80;
 
+    float TimerSinceLastChargeAudio = 0;
+
     public bool Dead = false;
 
     #region internal
@@ -72,6 +74,7 @@ public class Player : MonoBehaviour
         Collider = GetComponent<Collider2D>();
         ChangeMode(Modes.AIMING);
         InvokeRepeating("RefreshHUD", 0, refreshHUDFreq);
+        accumulatingPowerSoundTimer = Time.time;
     }
 
     void Update()
@@ -258,7 +261,12 @@ public class Player : MonoBehaviour
 
         ChangeMode(Modes.OUTOFCONTROL);
 
-        GameManager.Instance.SoundManager.Play("Charge");
+        if (Time.time - TimerSinceLastChargeAudio > 0.5f)
+        {
+            GameManager.Instance.SoundManager.Play("Charge");
+            TimerSinceLastChargeAudio = Time.time;
+        }
+
 
         GameManager.Instance.Effects.SmallSmoke(transform.position);
 
@@ -343,6 +351,7 @@ public class Player : MonoBehaviour
 
                 float _charge = Mathf.Clamp(_dist / (Screen.width / 2.5f), 0.1f, 1); //75
                 AccumulatedPower = _charge;
+                AccumulatingPowerSound(AccumulatedPower);
             }
 
         }
@@ -386,8 +395,27 @@ public class Player : MonoBehaviour
         }
     }
 
+    float previouslyAccumulatedPower = 0;
+    float accumulatingPowerSoundTimer = 0;
+    void AccumulatingPowerSound(float zCurrentlyAccumulatedPower)
+    {
+        if (Time.time - accumulatingPowerSoundTimer > 0.4f)
+        {
+            if (zCurrentlyAccumulatedPower > previouslyAccumulatedPower)
+            {
+                GameManager.Instance.SoundManager.Play("AccumulatingPower");
+            }
+            accumulatingPowerSoundTimer = Time.time;
+            previouslyAccumulatedPower = zCurrentlyAccumulatedPower;
+        }
+    }
+
     void PauseButton()
     {
+
+        GameManager.Instance.SoundManager.Play("Pause");
+
+
         GameManager.Instance.GamePaused = true;
         PreviousMode = Mode;
         Mode = Modes.INACTIVE;
@@ -396,6 +424,8 @@ public class Player : MonoBehaviour
             new PopupButton("Resume", () => 
             {
                 //Resume
+                GameManager.Instance.SoundManager.Play("Confirm");
+
                 GameManager.Instance.GamePaused = false;
                 Mode = PreviousMode;
                 Input.ResetInputAxes();
@@ -403,6 +433,8 @@ public class Player : MonoBehaviour
             new PopupButton("Quit", () => 
             { 
                 //Quit
+                GameManager.Instance.SoundManager.Play("Confirm");
+
                 GameManager.Instance.GamePaused = false;
                 GameManager.Instance.OpenStageSelect();
             }) });

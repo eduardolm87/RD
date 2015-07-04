@@ -137,7 +137,7 @@ public class GameManager : MonoBehaviour
 
         _loadingStageLocked = true;
         lastLoadedStagePrefab = stg;
-
+        SoundManager.Play("EnterLevel");
         yield return new WaitForSeconds(0.1f);
 
         //Curtain
@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
         Curtain.Instance.Text.text = "Loading\n" + "<b>" + stg.Name + "</b>";
 
         //Enter music
-        SoundManager.Play("EnterLevel");
+        SoundManager.StopMusic();
         yield return new WaitForSeconds(2);
 
         //Load the stage
@@ -295,7 +295,9 @@ public class GameManager : MonoBehaviour
         //GamePopup.Show("Stage cleared!\n" + "Time: <color=" + (_newRecord ? "yellow" : "white") + ">" + SecondsToTime(_completedTime) + "</color>", new PopupButton[] { new PopupButton("Ok", () => 
         SoundManager.Play("WinStage");
         GamePopup.Show("Stage cleared!\n", new PopupButton[] { new PopupButton("Ok", () => 
-        { 
+        {
+            GameManager.Instance.SoundManager.Play("Confirm");
+
             //Win
             Progress.SaveProgress();
 
@@ -314,6 +316,8 @@ public class GameManager : MonoBehaviour
             {
                 //Try again
 
+                GameManager.Instance.SoundManager.Play("Confirm");
+
                 DestroyCurrentScene();
 
                 if (lastLoadedStagePrefab != null)
@@ -325,7 +329,9 @@ public class GameManager : MonoBehaviour
                 
             }), 
             new PopupButton("Back", () => 
-            { 
+            {
+                GameManager.Instance.SoundManager.Play("Confirm");
+
                 //Lose
                 OpenStageSelect(); 
 
@@ -348,6 +354,7 @@ public class GameManager : MonoBehaviour
 
     public void BackFromSelectToTitle()
     {
+        GameManager.Instance.SoundManager.Play("Cancel");
         ChangeWindow(TitleScreenWindow);
     }
 

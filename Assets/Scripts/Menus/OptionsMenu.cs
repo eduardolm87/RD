@@ -22,9 +22,13 @@ public class OptionsMenu : MonoBehaviour
 
     public void Button_DeleteAllData()
     {
+        GameManager.Instance.SoundManager.Play("Confirm");
+
         GameManager.Instance.GamePopup.Show("Really delete all saved data?", new PopupButton[] { 
             new PopupButton("Delete", () => 
             {
+                GameManager.Instance.SoundManager.Play("Confirm");
+
                 GameManager.Instance.Progress.ResetAll();
 
                 while (GameManager.Instance.StageList.childCount > 0)
@@ -39,11 +43,14 @@ public class OptionsMenu : MonoBehaviour
             new PopupButton("Cancel", () => 
             {
                 //do nothing
+                GameManager.Instance.SoundManager.Play("Cancel");
             }) });
     }
 
     public void Toggle_Music(bool set)
     {
+        GameManager.Instance.SoundManager.Play("Confirm");
+
         GameManager.Instance.MuteMusic = !set;
 
         if (!set)
@@ -57,6 +64,8 @@ public class OptionsMenu : MonoBehaviour
     public void Toggle_SFX(bool set)
     {
         GameManager.Instance.MuteSFX = !set;
+
+        GameManager.Instance.SoundManager.Play("Confirm");
 
         GameManager.Instance.Progress.SaveSettings();
     }
