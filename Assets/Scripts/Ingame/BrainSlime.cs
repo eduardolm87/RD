@@ -9,7 +9,18 @@ public class BrainSlime : Brain
     {
         base.Start();
 
-        InvokeRepeating("WanderRandom", Frequency, Frequency);
+        InvokeRepeating("Act", Frequency, Frequency);
     }
 
+    void Act()
+    {
+        if (PlayerInVisionRange())
+        {
+            ChargeTowardsPlayer(monster.Attributes.Impulse);
+        }
+        else
+        {
+            WanderRandom();
+        }
+    }
 }

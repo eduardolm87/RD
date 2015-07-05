@@ -7,62 +7,59 @@ using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour
 {
+    //Declarations
+    public enum EndStageConditions { NONE = 0, WIN, LOSE };
     public enum Modes { AIMING, OUTOFCONTROL, INACTIVE };
     enum InputState { NOTPRESSED = 0, FIRSTTOUCH, CONTINUETOUCH, ENDTOUCH, OVERUI };
 
-    public static Vector2? aimingFrom = null, aimingTo = null;
 
-
-    public AimHUD AimHUD;
-
+    //Components
     public CharacterSprite CharSprite;
-
+    public AimHUD AimHUD;
     private Hero HeroData;
-
     public Collider2D Collider;
+    [HideInInspector]
+    public PlayerAttributes Attributes = new PlayerAttributes();
+    public Rigidbody2D Rigidbody;
 
+
+
+    //Public variables
     [HideInInspector]
     public float AccumulatedPower = 0;
-
-    float AccumulationPowerRate = 0.06f;
-
-    float refreshHUDFreq = 0.1f;
-
-    float damageWithSpeedFactor = 80;
-
-    float TimerSinceLastChargeAudio = 0;
-
+    [HideInInspector]
+    public bool pressedPauseButton = false;
+    [HideInInspector]
+    public bool targetEnemyKilled = false;
+    public static Vector2? aimingFrom = null, aimingTo = null;
     public bool Dead = false;
+    public Modes Mode = Modes.OUTOFCONTROL;
 
-    #region internal
 
+
+
+    //Internal
     float lowspeedThreshold = 3;
     float msUnderLowspeedTreshold = 0.25f;
     float lowspdTr_time = 0;
     float smokeRunTime = 0;
     float combatMinForceThreshold = 10;
-    List<Monster> _monstersCollidedWith = new List<Monster>();
+    List<Monster> monstersCollidedWith = new List<Monster>();
 
     [HideInInspector]
-    public Modes Mode = Modes.OUTOFCONTROL;
     Modes PreviousMode = Modes.OUTOFCONTROL;
-    public enum EndStageConditions { NONE = 0, WIN, LOSE };
     bool reachedGoal = false;
-    [HideInInspector]
-    public bool targetEnemyKilled = false;
 
-    [HideInInspector]
-    public PlayerAttributes Attributes = new PlayerAttributes();
-
-    [HideInInspector]
-    public bool pressedPauseButton = false;
+    float AccumulationPowerRate = 0.06f;
+    float refreshHUDFreq = 0.1f;
+    float damageWithSpeedFactor = 80;
+    float TimerSinceLastChargeAudio = 0;
+    float previouslyAccumulatedPower = 0;
+    float accumulatingPowerSoundTimer = 0;
 
     InputState previousState = InputState.NOTPRESSED;
 
 
-    public Rigidbody2D Rigidbody;
-
-    #endregion
 
     void Awake()
     {
@@ -106,37 +103,28 @@ public class Player : MonoBehaviour
         if (Dead)
             return;
 
-        Monster _monster = other.collider.GetComponent<Monster>();
-        if (_monster != null)
+        Monster monster = other.collider.GetComponent<Monster>();
+        if (monster != null)
         {
             if (other.relativeVelocity.sqrMagnitude > combatMinForceThreshold)
             {
-                if (!_monstersCollidedWith.Contains(_monster))
+                if (!monstersCollidedWith.Contains(monster))
                 {
                     //Attack to monster
-                    GameManager.Instance.Effects.Hit(transform.position + ((other.transform.position - transform.position) / 2f));
-
-                    Combat(_monster, DamageBonusOfSpeed(other.relativeVelocity.sqrMagnitude));
+                    OnHitToMonster(monster, other.relativeVelocity);
                 }
             }
-            else if (!_monster.CollidedWithPlayer)
+            else if (monster.Charging)
             {
                 //Receive damage from monster
-                _monster.AttackPlayer();
-                _monster.PauseForAMoment(1);
-                Rigidbody.velocity = (_monster.transform.position - transform.position);
-                Mode = Modes.OUTOFCONTROL;
-
-                int _damageReceived = 1;
-                if (_monster.Attributes.Alterations.Contains(Alteration.ClumsyAttack) && Random.Range(1, 10) > 7)
-                    _damageReceived = 0;
-
-                Damage(_damageReceived);
-                AimHUD.SetDirection(_monster.transform.position);
+                OnHitByMonster(monster, other.relativeVelocity);
             }
+
+            if (!monstersCollidedWith.Contains(monster))
+                monstersCollidedWith.Add(monster);
         }
         else
-            SolidBump(other.collider);
+            OnHitWithSolid(other.collider);
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -154,21 +142,134 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void LoadHero(Hero zHero)
+    public void Combat(Monster monster, float DamageBonus)
     {
-        HeroData = zHero;
+        Rigidbody.velocity = Vector2.zero;
 
-        Attributes = HeroData.Attributes;
-        Attributes.Restore();
-
-        CharSprite.Sprites.ToList().ForEach(s => s = HeroData.Graphic);
-
-        //Upgrades (later)
+        if (!monster.Attributes.Alterations.Contains(Alteration.NonPushable))
+        {
+            //Damage sequence
+            monster.DisableAnimation();
+            int _finalDamage = Mathf.RoundToInt(Attributes.Attack * DamageBonus);
+            monster.Damage(_finalDamage, this.gameObject);
+        }
+        else
+            GameManager.Instance.SoundManager.Play("bouncehit");
     }
 
-    float DamageBonusOfSpeed(float relativeSpeed)
+    EndStageConditions CheckConditionsForEnd()
     {
-        return Mathf.Clamp(relativeSpeed / damageWithSpeedFactor, 0.6f, 3);
+        if (GameManager.Instance.currentlyLoadedStage.Goal == Stage.StageGoals.KillAllEnemies && GameManager.Instance.currentlyLoadedStage.NumberOfLivingMonsters() < 1)
+        {
+            return EndStageConditions.WIN;
+        }
+        else if (GameManager.Instance.currentlyLoadedStage.Goal == Stage.StageGoals.ReachToCertainPoint && reachedGoal)
+        {
+            return EndStageConditions.WIN;
+        }
+        else if (GameManager.Instance.currentlyLoadedStage.Goal == Stage.StageGoals.KillCertainEnemy && targetEnemyKilled)
+        {
+            return EndStageConditions.WIN;
+        }
+        else if (Attributes.Stamina < 1)
+        {
+            return EndStageConditions.LOSE;
+        }
+
+        return EndStageConditions.NONE;
+    }
+
+    #region Control
+
+    void CheckPauseButton()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.M) || pressedPauseButton)
+        {
+            if (!GameManager.Instance.GamePaused)
+            {
+                PauseButton();
+                pressedPauseButton = false;
+            }
+        }
+    }
+
+    void AccumulatingPowerSound(float zCurrentlyAccumulatedPower)
+    {
+        if (Time.time - accumulatingPowerSoundTimer > 0.4f)
+        {
+            if (zCurrentlyAccumulatedPower > previouslyAccumulatedPower)
+            {
+                GameManager.Instance.SoundManager.Play("AccumulatingPower");
+            }
+            accumulatingPowerSoundTimer = Time.time;
+            previouslyAccumulatedPower = zCurrentlyAccumulatedPower;
+        }
+    }
+
+    void PauseButton()
+    {
+
+        GameManager.Instance.SoundManager.Play("Pause");
+
+
+        GameManager.Instance.GamePaused = true;
+        PreviousMode = Mode;
+        Mode = Modes.INACTIVE;
+
+        GameManager.Instance.GamePopup.Show(GameManager.Instance.GetPauseMenuText(), new PopupButton[] { 
+            new PopupButton("Resume", () => 
+            {
+                //Resume
+                GameManager.Instance.SoundManager.Play("Confirm");
+
+                GameManager.Instance.GamePaused = false;
+                Mode = PreviousMode;
+                Input.ResetInputAxes();
+            }), 
+            new PopupButton("Quit", () => 
+            { 
+                //Quit
+                GameManager.Instance.SoundManager.Play("Confirm");
+
+                GameManager.Instance.GamePaused = false;
+                GameManager.Instance.OpenStageSelect();
+            }) });
+    }
+
+    void RefreshHUD()
+    {
+        if (Time.timeScale == 1)
+            GameManager.Instance.TimeRealplay += refreshHUDFreq;
+
+        if (Mode == Modes.AIMING)
+        {
+            if (!GameManager.UsePowerBarWithTouchDuration || Input.GetMouseButton(0))
+            {
+                AccumulatePower();
+            }
+        }
+
+        GameManager.Instance.HUD.RefreshHUD(Attributes);
+    }
+
+    public void AccumulatePower()
+    {
+        if (GameManager.SwipeToChargePower)
+        {
+            if (aimingFrom != null && aimingTo != null)
+            {
+                float _dist = (aimingTo.Value - aimingFrom.Value).magnitude;
+
+                float _charge = Mathf.Clamp(_dist / (Screen.width / 2.5f), 0.1f, 1); //75
+                AccumulatedPower = _charge;
+                AccumulatingPowerSound(AccumulatedPower);
+            }
+
+        }
+        else
+        {
+            AccumulatedPower = Mathf.Clamp01(AccumulatedPower + AccumulationPowerRate);
+        }
     }
 
     void AimingControl()
@@ -287,7 +388,7 @@ public class Player : MonoBehaviour
         Rigidbody.angularVelocity = 0;
 
 
-        _monstersCollidedWith.Clear();
+        monstersCollidedWith.Clear();
 
         switch (CheckConditionsForEnd())
         {
@@ -309,138 +410,43 @@ public class Player : MonoBehaviour
 
     }
 
-    public void Combat(Monster monster, float DamageBonus)
-    {
-        Rigidbody.velocity = Vector2.zero;
-        _monstersCollidedWith.Add(monster);
+    #endregion
 
-        if (!monster.Attributes.Alterations.Contains(Alteration.NonPushable))
-        {
-            //Damage sequence
-            monster.DisableAnimation();
-            int _finalDamage = Mathf.RoundToInt(Attributes.Attack * DamageBonus);
-            monster.Damage(_finalDamage, this.gameObject);
-        }
-        else
-            GameManager.Instance.SoundManager.Play("bouncehit");
+    #region Collisions
+
+    void OnHitByMonster(Monster zMonster, Vector2 zRelativeVelocity)
+    {
+        zMonster.PauseForAMoment(1);
+
+        Knockback(zMonster.transform.position - transform.position);
+
+        Mode = Modes.OUTOFCONTROL;
+
+        DamageByMonster(zMonster);
+
+        AimHUD.SetDirection(zMonster.transform.position);
     }
 
-    void RefreshHUD()
+    void OnHitToMonster(Monster zMonster, Vector2 zRelativeVelocity)
     {
-        if (Time.timeScale == 1)
-            GameManager.Instance.TimeRealplay += refreshHUDFreq;
+        GameManager.Instance.Effects.Hit(transform.position + ((zMonster.transform.position - transform.position) / 2f));
 
-        if (Mode == Modes.AIMING)
-        {
-            if (!GameManager.UsePowerBarWithTouchDuration || Input.GetMouseButton(0))
-            {
-                AccumulatePower();
-            }
-        }
-
-        GameManager.Instance.HUD.RefreshHUD(Attributes);
+        Combat(zMonster, DamageBonusOfSpeed(zRelativeVelocity.sqrMagnitude));
     }
 
-    public void AccumulatePower()
+    void DamageByMonster(Monster zMonster)
     {
-        if (GameManager.SwipeToChargePower)
-        {
-            if (aimingFrom != null && aimingTo != null)
-            {
-                float _dist = (aimingTo.Value - aimingFrom.Value).magnitude;
+        int _damageReceived = zMonster.Attributes.Attack;
 
-                float _charge = Mathf.Clamp(_dist / (Screen.width / 2.5f), 0.1f, 1); //75
-                AccumulatedPower = _charge;
-                AccumulatingPowerSound(AccumulatedPower);
-            }
-
-        }
-        else
+        if (zMonster.Attributes.Alterations.Contains(Alteration.ClumsyAttack) && Random.Range(1, 10) > 7)
         {
-            AccumulatedPower = Mathf.Clamp01(AccumulatedPower + AccumulationPowerRate);
+            _damageReceived = 0;
         }
+
+        Damage(_damageReceived);
     }
 
-    EndStageConditions CheckConditionsForEnd()
-    {
-        if (GameManager.Instance.currentlyLoadedStage.Goal == Stage.StageGoals.KillAllEnemies && GameManager.Instance.currentlyLoadedStage.NumberOfLivingMonsters() < 1)
-        {
-            return EndStageConditions.WIN;
-        }
-        else if (GameManager.Instance.currentlyLoadedStage.Goal == Stage.StageGoals.ReachToCertainPoint && reachedGoal)
-        {
-            return EndStageConditions.WIN;
-        }
-        else if (GameManager.Instance.currentlyLoadedStage.Goal == Stage.StageGoals.KillCertainEnemy && targetEnemyKilled)
-        {
-            return EndStageConditions.WIN;
-        }
-        else if (Attributes.Stamina < 1)
-        {
-            return EndStageConditions.LOSE;
-        }
-
-        return EndStageConditions.NONE;
-    }
-
-    void CheckPauseButton()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.M) || pressedPauseButton)
-        {
-            if (!GameManager.Instance.GamePaused)
-            {
-                PauseButton();
-                pressedPauseButton = false;
-            }
-        }
-    }
-
-    float previouslyAccumulatedPower = 0;
-    float accumulatingPowerSoundTimer = 0;
-    void AccumulatingPowerSound(float zCurrentlyAccumulatedPower)
-    {
-        if (Time.time - accumulatingPowerSoundTimer > 0.4f)
-        {
-            if (zCurrentlyAccumulatedPower > previouslyAccumulatedPower)
-            {
-                GameManager.Instance.SoundManager.Play("AccumulatingPower");
-            }
-            accumulatingPowerSoundTimer = Time.time;
-            previouslyAccumulatedPower = zCurrentlyAccumulatedPower;
-        }
-    }
-
-    void PauseButton()
-    {
-
-        GameManager.Instance.SoundManager.Play("Pause");
-
-
-        GameManager.Instance.GamePaused = true;
-        PreviousMode = Mode;
-        Mode = Modes.INACTIVE;
-
-        GameManager.Instance.GamePopup.Show(GameManager.Instance.GetPauseMenuText(), new PopupButton[] { 
-            new PopupButton("Resume", () => 
-            {
-                //Resume
-                GameManager.Instance.SoundManager.Play("Confirm");
-
-                GameManager.Instance.GamePaused = false;
-                Mode = PreviousMode;
-                Input.ResetInputAxes();
-            }), 
-            new PopupButton("Quit", () => 
-            { 
-                //Quit
-                GameManager.Instance.SoundManager.Play("Confirm");
-
-                GameManager.Instance.GamePaused = false;
-                GameManager.Instance.OpenStageSelect();
-            }) });
-    }
-
-    public void SolidBump(Collider2D other)
+    public void OnHitWithSolid(Collider2D other)
     {
         if (other.GetComponent<Rigidbody2D>() != null)
         {
@@ -466,6 +472,27 @@ public class Player : MonoBehaviour
             GameManager.Instance.SoundManager.Play("BumpWithWall");
         }
 
+    }
+
+    #endregion
+
+    #region Attributes
+
+    public void LoadHero(Hero zHero)
+    {
+        HeroData = zHero;
+
+        Attributes = HeroData.Attributes;
+        Attributes.Restore();
+
+        CharSprite.Sprites.ToList().ForEach(s => s = HeroData.Graphic);
+
+        //Upgrades (later)
+    }
+
+    float DamageBonusOfSpeed(float relativeSpeed)
+    {
+        return Mathf.Clamp(relativeSpeed / damageWithSpeedFactor, 0.6f, 3);
     }
 
     public void Heal(int quantity)
@@ -502,8 +529,8 @@ public class Player : MonoBehaviour
         }
         else
         {
-            //Repel damage
-            Rigidbody.velocity = (-Rigidbody.velocity.normalized) * 5;
+            //Automatic knockback
+            Knockback((-Rigidbody.velocity.normalized) * 5);
             AccumulatedPower = 0;
         }
     }
@@ -541,6 +568,8 @@ public class Player : MonoBehaviour
     {
         Mode = Modes.OUTOFCONTROL;
     }
+
+    #endregion
 
     void AutoWinCheat()
     {

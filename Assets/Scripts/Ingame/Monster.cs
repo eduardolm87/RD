@@ -10,8 +10,6 @@ public class Monster : MonoBehaviour
     public List<Reward> Rewards = new List<Reward>();
 
     [HideInInspector]
-    public bool CollidedWithPlayer = false;
-    [HideInInspector]
     public bool AttackedByPlayer = false;
 
 
@@ -25,6 +23,38 @@ public class Monster : MonoBehaviour
     public Collider2D Collider;
     [HideInInspector]
     public NPCGUI UI;
+
+    private bool charging = false;
+    public bool Charging
+    {
+        get { return charging; }
+        set
+        {
+            charging = value;
+            if (charging)
+            {
+                Invoke("ChargeTimer", 1.5f);
+            }
+            else
+            {
+                CancelInvoke("ChargeTimer");
+            }
+        }
+
+    }
+
+
+
+
+
+    void ChargeTimer()
+    {
+        if (Charging)
+        {
+            Charging = false;
+        }
+    }
+
 
 
 
@@ -46,9 +76,13 @@ public class Monster : MonoBehaviour
     {
         bool _resistDamage = Attributes.Alterations.Contains(Alteration.DamageResistant) && source != null;
 
-
         if (!_resistDamage)
             Attributes.HP = Mathf.Clamp(Attributes.HP - quantity, 0, Attributes.HPmax);
+
+        if (Charging)
+        {
+            Charging = false;
+        }
 
         if (Attributes.HP < 1)
         {
@@ -121,50 +155,65 @@ public class Monster : MonoBehaviour
         Brain.enabled = true;
     }
 
-    public void AttackPlayer()
-    {
-        CollidedWithPlayer = true;
-        Invoke("RestoreAttackPlayer", 1 + (Attributes.Alterations.Contains(Alteration.WaitMoreUntilAttackAgain) ? 1.5f : 0));
-    }
-
-    void RestoreAttackPlayer()
-    {
-        CollidedWithPlayer = false;
-    }
-
     public void OnCollisionEnter2D(Collision2D col)
     {
         Monster _monster = col.collider.GetComponent<Monster>();
         if (_monster != null)
         {
-            if (AttackedByPlayer)
+            if (col.relativeVelocity.sqrMagnitude > 100)
             {
-                if (col.relativeVelocity.sqrMagnitude > 100)
-                {
-                    _monster.Damage(1, _monster.gameObject);
-                }
+                OnCollisionWithMonster(_monster);
             }
+        }
+        else if (col.collider.GetComponent<Player>() != null)
+        {
+            OnCollisionWithPlayer();
         }
         else
         {
-            if (col.collider.GetComponent<Player>() == null)
+            Rigidbody2D colRigidbody = col.collider.GetComponent<Rigidbody2D>();
+            if (colRigidbody != null)
             {
-                if (!AttackedByPlayer && !CollidedWithPlayer)
+                if (col.relativeVelocity.sqrMagnitude > 100)
                 {
-                    if (col.collider.GetComponent<Rigidbody2D>() != null)
-                    {
-                        if (col.relativeVelocity.sqrMagnitude > 100)
-                        {
-                            if (col.collider.GetComponent<Rigidbody2D>().velocity.sqrMagnitude > 2)
-                            {
-                                int _damage = Mathf.Clamp(Mathf.RoundToInt(col.relativeVelocity.sqrMagnitude / 80), 1, 3);
-                                Damage(_damage, col.collider.gameObject);
-                            }
-                        }
-                    }
+                    OnCollisionWithRigidbody(colRigidbody, col.relativeVelocity);
                 }
             }
+            else
+            {
+                OnCollisionWithSolid(col.collider);
+            }
+
         }
+    }
+
+    void OnCollisionWithMonster(Monster zMonster)
+    {
+        //Monster hits other monsters in chain effect
+        if (AttackedByPlayer)
+        {
+            zMonster.Damage(1, zMonster.gameObject);
+        }
+    }
+
+    void OnCollisionWithPlayer()
+    {
+
+    }
+
+    void OnCollisionWithRigidbody(Rigidbody2D zRigidbody, Vector2 zRelativeVelocity)
+    {
+        //Obstacles hit me
+        if (zRigidbody.velocity.sqrMagnitude > 2)
+        {
+            int _damage = Mathf.Clamp(Mathf.RoundToInt(zRelativeVelocity.sqrMagnitude / 80), 1, 3);
+            Damage(_damage, zRigidbody.gameObject);
+        }
+    }
+
+    void OnCollisionWithSolid(Collider2D zCollider)
+    {
+
     }
 
     void DropReward()
@@ -196,5 +245,4 @@ public class Monster : MonoBehaviour
 
         }
     }
-
 }

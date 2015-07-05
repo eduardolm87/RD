@@ -26,10 +26,15 @@ public class Attributes
     [UnityEngine.HideInInspector]
     public float Impulse;
 
+    public int Attack_max = 1;
+    [UnityEngine.HideInInspector]
+    public int Attack;
+
     public virtual void Restore()
     {
         HP = HPmax;
         Impulse = Impulse_max;
+        Attack = Attack_max;
     }
 }
 
@@ -44,14 +49,12 @@ public class PlayerAttributes : Attributes
 {
     public int Money = 0;
 
-    public int Attack_max = 1;
     public float Precission_max = 6;
     public int Stamina_max = 10;
     public int Defense_max = 0;
 
 
-    [UnityEngine.HideInInspector]
-    public int Attack;
+  
 
     [UnityEngine.HideInInspector]
     public float Precission;
@@ -69,7 +72,6 @@ public class PlayerAttributes : Attributes
     {
         base.Restore();
 
-        Attack = Attack_max;
         Precission = Precission_max;
         Stamina = Stamina_max;
     }

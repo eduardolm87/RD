@@ -54,7 +54,7 @@ public class Brain : MonoBehaviour
 
     protected void ChargeTowardsPlayer(float zSpeed)
     {
-        monster.AttackPlayer();
+        monster.Charging = true;
         MoveTowardsPlayer(zSpeed);
     }
 
