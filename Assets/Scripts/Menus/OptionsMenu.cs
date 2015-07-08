@@ -58,6 +58,8 @@ public class OptionsMenu : MonoBehaviour
         else
             GameManager.Instance.SoundManager.PlayMusic(GameManager.Instance.TitleScreenWindow.GetComponent<TitleScreen>().MusicClip.name);
 
+        OptionsChanged();
+
         GameManager.Instance.Progress.SaveSettings();
     }
 
@@ -67,6 +69,14 @@ public class OptionsMenu : MonoBehaviour
 
         GameManager.Instance.SoundManager.Play("Confirm");
 
+        OptionsChanged();
+
         GameManager.Instance.Progress.SaveSettings();
+    }
+
+
+    void OptionsChanged()
+    {
+        GameManager.Instance.SoundManager.ApplyVolume();
     }
 }

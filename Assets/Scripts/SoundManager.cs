@@ -5,6 +5,11 @@ using System.Linq;
 
 public class SoundManager : MonoBehaviour
 {
+    [Range(0f, 1f)]
+    public float SFXVolume = 1;
+    [Range(0f, 1f)]
+    public float MusicVolume = 1;
+
     public AudioListener Listener;
 
     public AudioSource Source1, Source2;
@@ -14,6 +19,18 @@ public class SoundManager : MonoBehaviour
     public AudioClip[] MusicClips;
 
     public AudioClip[] Clips;
+
+    void Start()
+    {
+        ApplyVolume();
+    }
+
+    public void ApplyVolume()
+    {
+        Source1.volume = SFXVolume;
+        Source2.volume = SFXVolume;
+        MusicSource.volume = MusicVolume;
+    }
 
     public void Play(string ID)
     {
@@ -25,6 +42,7 @@ public class SoundManager : MonoBehaviour
         {
             AudioSource _source = GetFreeSource();
             _source.clip = _clip;
+            _source.volume = SFXVolume;
             _source.Play();
         }
         else
@@ -49,8 +67,9 @@ public class SoundManager : MonoBehaviour
         AudioClip _clip = MusicClips.FirstOrDefault(x => x.name == ID);
         MusicSource.clip = _clip;
         MusicSource.pitch = Speed;
-        MusicSource.volume = 1;
+        MusicSource.volume = MusicVolume;
         MusicSource.Play();
+        Debug.Log("Tocando " + ID + " con volumen " + MusicSource.volume);
     }
 
     public void StopMusic()
@@ -77,7 +96,7 @@ public class SoundManager : MonoBehaviour
         }
 
         MusicSource.Stop();
-        MusicSource.volume = 1;
+        MusicSource.volume = MusicVolume;
     }
 
 }

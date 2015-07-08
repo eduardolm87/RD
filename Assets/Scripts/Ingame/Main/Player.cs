@@ -195,7 +195,7 @@ public class Player : MonoBehaviour
 
     void AccumulatingPowerSound(float zCurrentlyAccumulatedPower)
     {
-        if (Time.time - accumulatingPowerSoundTimer > 0.4f)
+        if (Time.time - accumulatingPowerSoundTimer > 0.16f)
         {
             if (zCurrentlyAccumulatedPower > previouslyAccumulatedPower)
             {
