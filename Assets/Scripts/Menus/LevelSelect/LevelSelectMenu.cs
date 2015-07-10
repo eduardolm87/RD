@@ -33,6 +33,10 @@ public class LevelSelectMenu : MonoBehaviour
         if (zStageToLoad == null)
         {
             CurrentStage = GameManager.Instance.Run.GetLastUnlockedStage();
+            if (CurrentStage == null)
+            {
+                Debug.LogError("Error retrieving Current Stage");
+            }
         }
         else
         {

@@ -29,7 +29,7 @@ public class RunProgress
 
         GetDefaultHero();
 
-        AddNewStage();
+        UnlockedStages.Add(GameManager.Instance.Collections.StagesInGame.First());
     }
 
     public void AddNewStage()

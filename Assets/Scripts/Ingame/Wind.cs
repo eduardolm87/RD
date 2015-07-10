@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Wind : MonoBehaviour
 {
+   public float Force = 50;
+
     void OnTriggerStay2D(Collider2D other)
     {
         if (other.GetComponent<Rigidbody2D>() != null)
@@ -18,7 +20,7 @@ public class Wind : MonoBehaviour
 
             if (_canAffect)
             {
-                other.GetComponent<Rigidbody2D>().AddForce(transform.up * 50);
+                other.GetComponent<Rigidbody2D>().AddForce(transform.up * Force);
             }
         }
     }

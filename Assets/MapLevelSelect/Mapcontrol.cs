@@ -65,7 +65,14 @@ public class Mapcontrol : MonoBehaviour
 
     public MapStep GetMapstepFromStage(Stage zStage)
     {
-        return MapSteps.FirstOrDefault(s => s.Stage == zStage);
+        MapStep map = MapSteps.FirstOrDefault(s => s.Stage == zStage);
+
+        if (map == null)
+        {
+            Debug.LogError("Error in map: Stage " + zStage.name + " has not a location assigned.");
+        }
+
+        return map;
     }
 
     public void RefreshPaths()

@@ -124,7 +124,17 @@ public class Player : MonoBehaviour
                 monstersCollidedWith.Add(monster);
         }
         else
-            OnHitWithSolid(other.collider);
+        {
+            Interactive interactive = other.collider.GetComponent<Interactive>();
+            if (interactive != null)
+            {
+                interactive.OnPlayerTouch();
+            }
+            else
+            {
+                OnHitWithSolid(other.collider);
+            }
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -138,7 +148,26 @@ public class Player : MonoBehaviour
             {
                 reachedGoal = true;
                 DragStop();
+                return;
             }
+        }
+
+        BuildingVisibilityTrigger building = other.GetComponent<BuildingVisibilityTrigger>();
+        if(building!=null)
+        {
+            building.Building.Enter();
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (Dead)
+            return;
+
+        BuildingVisibilityTrigger building = other.GetComponent<BuildingVisibilityTrigger>();
+        if (building != null)
+        {
+            building.Building.Exit();
         }
     }
 
