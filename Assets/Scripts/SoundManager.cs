@@ -69,7 +69,6 @@ public class SoundManager : MonoBehaviour
         MusicSource.pitch = Speed;
         MusicSource.volume = MusicVolume;
         MusicSource.Play();
-        Debug.Log("Tocando " + ID + " con volumen " + MusicSource.volume);
     }
 
     public void StopMusic()

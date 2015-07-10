@@ -38,6 +38,8 @@ public class Mapcontrol : MonoBehaviour
             Initialization();
         }
 
+        PlayerNavigator.Renderer.sprite = GameManager.Instance.Run.CurrentHero.Graphic;
+
         PlayerNavigator.SetOnStep(GetMapstepFromStage(zStageToSet));
 
         RefreshPaths();

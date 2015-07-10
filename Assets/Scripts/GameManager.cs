@@ -141,9 +141,9 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         //Curtain
-        Curtain.Instance.Show();
-        yield return new WaitForSeconds(Curtain.Instance.Duration);
-        Curtain.Instance.Text.text = "Loading\n" + "<b>" + stg.Name + "</b>";
+        Effects.Curtain.Show();
+        yield return new WaitForSeconds(Effects.Curtain.Duration);
+        Effects.Curtain.Text.text = "Loading\n" + "<b>" + stg.Name + "</b>";
 
         //Enter music
         SoundManager.StopMusic();
@@ -184,9 +184,9 @@ public class GameManager : MonoBehaviour
 
         //Curtain
         currentPlayer.Collider.enabled = false;
-        iTween.MoveFrom(_playerObj, iTween.Hash("y", 5, "islocal", true, "time", 1 + Curtain.Instance.Duration, "easetype", iTween.EaseType.easeOutBounce));
-        Curtain.Instance.Hide();
-        yield return new WaitForSeconds(Curtain.Instance.Duration);
+        iTween.MoveFrom(_playerObj, iTween.Hash("y", 5, "islocal", true, "time", 1 + Effects.Curtain.Duration, "easetype", iTween.EaseType.easeOutBounce));
+        Effects.Curtain.Hide();
+        yield return new WaitForSeconds(Effects.Curtain.Duration);
 
         //Hero Appear bouncing
         GameCamera cam = GameObject.FindObjectOfType<GameCamera>();
@@ -346,10 +346,11 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (zCompletedStage.name == Run.GetLastUnlockedStage().name)
-        {
-            Run.AddNewStage();
-        }
+        Run.UnlockNewStageFrom(zCompletedStage);
+        //if (zCompletedStage.name == Run.GetLastUnlockedStage().name)
+        //{
+        //    Run.AddNewStage();
+        //}
     }
 
     public void BackFromSelectToTitle()

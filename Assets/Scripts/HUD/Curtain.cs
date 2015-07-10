@@ -4,23 +4,14 @@ using UnityEngine.UI;
 
 public class Curtain : MonoBehaviour
 {
-    public static Curtain Instance = null;
-
     public Text Text;
     public Image Image;
     public float Duration = 0.5f;
 
-    void Awake()
-    {
-        Instance = this;
-        Image.CrossFadeAlpha(0, 0, true);
-        Deactivate();
-    }
-
     public void Show()
     {
-        Text.text = "";
         Activate();
+        Text.text = "";
         Image.CrossFadeAlpha(1, Duration, false);
     }
 

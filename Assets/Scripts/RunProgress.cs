@@ -100,4 +100,23 @@ public class RunProgress
         UnlockedHeroes.Add(GameManager.Instance.Collections.HeroesInGame.First());
         CurrentHero = UnlockedHeroes.First();
     }
+
+    public void UnlockNewStageFrom(Stage zCompletedStage)
+    {
+        if (zCompletedStage.NextStageUnlocked != null)
+        {
+            if (GameManager.Instance.Collections.StagesInGame.Contains(zCompletedStage.NextStageUnlocked))
+            {
+                UnlockedStages.Add(zCompletedStage.NextStageUnlocked);
+            }
+            else
+            {
+                Debug.LogError("Tried to unlock a stage not included in the Collections");
+            }
+        }
+        else
+        {
+            Debug.Log("The stage has not a next stage to unlock.");
+        }
+    }
 }

@@ -485,7 +485,14 @@ public class Player : MonoBehaviour
         Attributes = HeroData.Attributes;
         Attributes.Restore();
 
-        CharSprite.Sprites.ToList().ForEach(s => s = HeroData.Graphic);
+        List<Sprite> sprites = new List<Sprite>();
+        sprites.Add(zHero.Graphic);
+        sprites.Add(zHero.Graphic);
+        CharSprite.Sprites = sprites.ToArray();
+
+        CharSprite.Renderer = GetComponent<SpriteRenderer>();
+        CharSprite.Renderer.sprite = zHero.Graphic;
+
 
         //Upgrades (later)
     }

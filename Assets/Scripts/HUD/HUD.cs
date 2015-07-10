@@ -12,6 +12,8 @@ public class HUD : MonoBehaviour
     public Text Attack;
     //public Text Defense;
 
+    public Image Portrait;
+
     void Update()
     {
         UpdatePowerBar();
@@ -28,6 +30,8 @@ public class HUD : MonoBehaviour
         //Defense.text = GameManager.Instance.currentPlayer.Attributes.Defense.ToString();
 
         Name.text = GameManager.Instance.Run.CurrentHero.Name.ToUpper();
+
+        Portrait.sprite = GameManager.Instance.Run.CurrentHero.Graphic;
     }
 
     void UpdatePowerBar()

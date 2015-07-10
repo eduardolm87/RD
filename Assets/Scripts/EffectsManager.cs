@@ -90,4 +90,8 @@ public class EffectsManager : MonoBehaviour
         Destroy(_hit.Dequeue());
     }
     #endregion
+
+    #region Curtain
+    public Curtain Curtain;
+    #endregion
 }
