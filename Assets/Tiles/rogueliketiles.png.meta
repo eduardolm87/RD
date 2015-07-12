@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: a77d722e89ddaaf4baf02e85087faf46
-timeCreated: 1436565753
+timeCreated: 1436699254
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -118,6 +118,7 @@ TextureImporter:
     21300222: rogueliketiles_111
     21300224: rogueliketiles_112
     21300226: rogueliketiles_113
+    21300228: rogueliketiles_114
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -1297,6 +1298,16 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
+        y: 76
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_114
+      rect:
+        serializedVersion: 2
+        x: 32
         y: 76
         width: 16
         height: 16
