@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: a77d722e89ddaaf4baf02e85087faf46
-timeCreated: 1436536049
+timeCreated: 1436565753
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -101,6 +101,23 @@ TextureImporter:
     21300188: rogueliketiles_94
     21300190: rogueliketiles_95
     21300192: rogueliketiles_96
+    21300194: rogueliketiles_97
+    21300196: rogueliketiles_98
+    21300198: rogueliketiles_99
+    21300200: rogueliketiles_100
+    21300202: rogueliketiles_101
+    21300204: rogueliketiles_102
+    21300206: rogueliketiles_103
+    21300208: rogueliketiles_104
+    21300210: rogueliketiles_105
+    21300212: rogueliketiles_106
+    21300214: rogueliketiles_107
+    21300216: rogueliketiles_108
+    21300218: rogueliketiles_109
+    21300220: rogueliketiles_110
+    21300222: rogueliketiles_111
+    21300224: rogueliketiles_112
+    21300226: rogueliketiles_113
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -959,8 +976,8 @@ TextureImporter:
     - name: rogueliketiles_81
       rect:
         serializedVersion: 2
-        x: 0
-        y: 156
+        x: 64
+        y: 172
         width: 16
         height: 16
       alignment: 0
@@ -969,8 +986,8 @@ TextureImporter:
     - name: rogueliketiles_82
       rect:
         serializedVersion: 2
-        x: 16
-        y: 156
+        x: 80
+        y: 172
         width: 16
         height: 16
       alignment: 0
@@ -979,7 +996,7 @@ TextureImporter:
     - name: rogueliketiles_83
       rect:
         serializedVersion: 2
-        x: 32
+        x: 0
         y: 156
         width: 16
         height: 16
@@ -989,7 +1006,7 @@ TextureImporter:
     - name: rogueliketiles_84
       rect:
         serializedVersion: 2
-        x: 48
+        x: 16
         y: 156
         width: 16
         height: 16
@@ -999,8 +1016,8 @@ TextureImporter:
     - name: rogueliketiles_85
       rect:
         serializedVersion: 2
-        x: 0
-        y: 140
+        x: 32
+        y: 156
         width: 16
         height: 16
       alignment: 0
@@ -1009,8 +1026,8 @@ TextureImporter:
     - name: rogueliketiles_86
       rect:
         serializedVersion: 2
-        x: 32
-        y: 140
+        x: 48
+        y: 156
         width: 16
         height: 16
       alignment: 0
@@ -1019,8 +1036,8 @@ TextureImporter:
     - name: rogueliketiles_87
       rect:
         serializedVersion: 2
-        x: 48
-        y: 140
+        x: 64
+        y: 156
         width: 16
         height: 16
       alignment: 0
@@ -1029,8 +1046,8 @@ TextureImporter:
     - name: rogueliketiles_88
       rect:
         serializedVersion: 2
-        x: 0
-        y: 124
+        x: 80
+        y: 156
         width: 16
         height: 16
       alignment: 0
@@ -1039,8 +1056,8 @@ TextureImporter:
     - name: rogueliketiles_89
       rect:
         serializedVersion: 2
-        x: 16
-        y: 124
+        x: 0
+        y: 140
         width: 16
         height: 16
       alignment: 0
@@ -1050,7 +1067,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 124
+        y: 140
         width: 16
         height: 16
       alignment: 0
@@ -1059,8 +1076,8 @@ TextureImporter:
     - name: rogueliketiles_91
       rect:
         serializedVersion: 2
-        x: 0
-        y: 108
+        x: 48
+        y: 140
         width: 16
         height: 16
       alignment: 0
@@ -1069,8 +1086,8 @@ TextureImporter:
     - name: rogueliketiles_92
       rect:
         serializedVersion: 2
-        x: 16
-        y: 108
+        x: 64
+        y: 140
         width: 16
         height: 16
       alignment: 0
@@ -1079,8 +1096,8 @@ TextureImporter:
     - name: rogueliketiles_93
       rect:
         serializedVersion: 2
-        x: 32
-        y: 108
+        x: 80
+        y: 140
         width: 16
         height: 16
       alignment: 0
@@ -1090,7 +1107,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 92
+        y: 124
         width: 16
         height: 16
       alignment: 0
@@ -1100,7 +1117,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
-        y: 92
+        y: 124
         width: 16
         height: 16
       alignment: 0
@@ -1110,7 +1127,177 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
+        y: 124
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_97
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 124
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_98
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 124
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_99
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 124
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_100
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 108
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_101
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 108
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_102
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 108
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_103
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 108
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_104
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 108
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_105
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 108
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_106
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 92
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_107
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 92
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_108
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 92
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_109
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 92
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_110
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 92
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_111
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 92
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_112
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 76
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: rogueliketiles_113
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 76
         width: 16
         height: 16
       alignment: 0
