@@ -18,6 +18,8 @@ public class Mapcontrol : MonoBehaviour
 
     bool ShowNewCinematic = false;
 
+    public bool ShowingCinematic = false;
+
     [SerializeField]
     private GameObject NewIndication;
 
@@ -43,6 +45,10 @@ public class Mapcontrol : MonoBehaviour
         PlayerNavigator.SetOnStep(GetMapstepFromStage(zStageToSet));
 
         RefreshPaths();
+
+        GameManager.Instance.LevelSelectMenu.StageInfo.LoadInfo(PlayerNavigator.CurrentStep.Stage);
+
+        GameManager.Instance.LevelSelectMenu.Map.NavigationInterface.Show(PlayerNavigator.CurrentStep.GetAvailableDirections());
     }
 
     public void Close()
@@ -169,9 +175,13 @@ public class Mapcontrol : MonoBehaviour
                 Debug.LogError("Error getting the newest stage.");
                 yield break;
             }
+
+            ShowingCinematic = true;
+
             MapStep mapStep = MapSteps.FirstOrDefault(m => m.Stage == NewestStage);
             if (mapStep == null)
             {
+                ShowingCinematic = false;
                 Debug.LogError("Error getting the newest stage in the map.");
             }
 
@@ -212,6 +222,8 @@ public class Mapcontrol : MonoBehaviour
         NewIndication.SetActive(false);
         GameManager.Instance.LevelSelectMenu.StageInfo.LoadInfo(PlayerNavigator.CurrentStep.Stage);
         GameManager.Instance.LevelSelectMenu.Map.NavigationInterface.Show(PlayerNavigator.CurrentStep.GetAvailableDirections());
+
+        ShowingCinematic = false;
     }
 
     IEnumerator MoveCameraToPoint(Vector3 zPoint, float zTime)

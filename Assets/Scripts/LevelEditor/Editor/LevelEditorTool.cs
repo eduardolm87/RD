@@ -16,10 +16,13 @@ public class LevelEditorTool : Editor
 
     static bool fold_goals = true;
     static bool fold_metadata = true;
+    static bool fold_tiletool = false;
 
 
 
     string HelpboxText = "";
+
+    public Stage StageInScene = null;
 
 
     void OnEnable()
@@ -29,6 +32,8 @@ public class LevelEditorTool : Editor
         Music = serializedObject.FindProperty("Music");
         NextStage = serializedObject.FindProperty("NextStageUnlocked");
 
+
+        StageInScene = GameObject.FindObjectsOfType<Stage>().ToList().FirstOrDefault(stg => stg == target);
     }
 
     public override void OnInspectorGUI()
@@ -49,6 +54,20 @@ public class LevelEditorTool : Editor
             Goals();
         }
 
+        fold_tiletool = EditorGUILayout.Foldout(fold_tiletool, "Tile Tools");
+        if (fold_tiletool)
+        {
+            if (GUILayout.Button("Config"))
+            {
+                ShowTileTool();
+            }
+
+            if (GUILayout.Button("Use"))
+            {
+                UseTileTool();
+            }
+        }
+
         if (GUILayout.Button("Autocheck"))
         {
             Autocomplete();
@@ -65,7 +84,6 @@ public class LevelEditorTool : Editor
         {
             EditorUtility.SetDirty(stage);
         }
-
 
         serializedObject.ApplyModifiedProperties();
 
@@ -124,6 +142,7 @@ public class LevelEditorTool : Editor
         MakeWallsStatic();
         FindStart();
         FindEnd();
+        CheckTileTool();
     }
 
 
@@ -169,9 +188,57 @@ public class LevelEditorTool : Editor
         }
     }
 
+    void CheckTileTool()
+    {
+        MonobehaviorEditorTool tool = StageInScene.gameObject.GetComponent<MonobehaviorEditorTool>();
+        if (tool != null)
+        {
+            Destroy(tool);
+            HelpLog("Tile tool removed.", MessageType.Warning);
+        }
+    }
 
     void HelpLog(string zMsg, MessageType zType = MessageType.Info)
     {
         HelpboxText = zMsg;
     }
+
+    void ShowTileTool()
+    {
+        if (StageInScene == null)
+        {
+            Debug.LogError("Error.");
+            return;
+        }
+
+        MonobehaviorEditorTool tool = StageInScene.gameObject.GetComponent<MonobehaviorEditorTool>();
+
+        if (tool == null)
+        {
+            StageInScene.gameObject.AddComponent<MonobehaviorEditorTool>();
+        }
+    }
+
+    void UseTileTool()
+    {
+        MonobehaviorEditorTool tool = StageInScene.gameObject.GetComponent<MonobehaviorEditorTool>();
+        if (tool == null)
+        {
+            ShowTileTool();
+            tool = StageInScene.gameObject.GetComponent<MonobehaviorEditorTool>();
+        }
+
+        if (tool.ReferenceSprite == null)
+        {
+            Debug.LogError("Error: Reference sprite not configured.");
+            return;
+        }
+
+        List<SpriteRenderer> FloorTiles = StageInScene.GetComponentsInChildren<SpriteRenderer>().ToList();
+
+        FloorTiles.RemoveAll(t => t.sprite != tool.ReferenceSprite);
+
+        tool.Apply(FloorTiles);
+    }
+
 }

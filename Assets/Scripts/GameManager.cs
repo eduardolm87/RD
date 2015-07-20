@@ -184,7 +184,7 @@ public class GameManager : MonoBehaviour
 
         //Curtain
         currentPlayer.Collider.enabled = false;
-        iTween.MoveFrom(_playerObj, iTween.Hash("y", 5, "islocal", true, "time", 1 + Effects.Curtain.Duration, "easetype", iTween.EaseType.easeOutBounce));
+        //iTween.MoveFrom(_playerObj, iTween.Hash("y", 5, "islocal", true, "time", 1 + Effects.Curtain.Duration, "easetype", iTween.EaseType.easeOutBounce));
         Effects.Curtain.Hide();
         yield return new WaitForSeconds(Effects.Curtain.Duration);
 
@@ -193,13 +193,13 @@ public class GameManager : MonoBehaviour
         Transform cameraParent = cam.transform.parent;
         cam.transform.parent = null;
 
-        yield return new WaitForSeconds(0.15f);
-        SoundManager.Play("BumpWithOtherRigidbodies");
-        yield return new WaitForSeconds(0.45f);
-        SoundManager.Play("BumpWithOtherRigidbodies");
-        yield return new WaitForSeconds(0.2f);
-        SoundManager.Play("BumpWithOtherRigidbodies");
-        yield return new WaitForSeconds(0.2f);
+        //yield return new WaitForSeconds(0.15f);
+        //SoundManager.Play("BumpWithOtherRigidbodies");
+        //yield return new WaitForSeconds(0.45f);
+        //SoundManager.Play("BumpWithOtherRigidbodies");
+        //yield return new WaitForSeconds(0.2f);
+        //SoundManager.Play("BumpWithOtherRigidbodies");
+        //yield return new WaitForSeconds(0.2f);
 
 
 

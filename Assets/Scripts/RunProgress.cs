@@ -9,7 +9,7 @@ public class RunProgress
     public List<Hero> UnlockedHeroes = new List<Hero>();
     public const int NumberOfStagesInRun = 10;
     public Hero CurrentHero = null;
-
+    public int Money = 0;
 
     public Stage GetLastUnlockedStage()
     {
@@ -119,4 +119,11 @@ public class RunProgress
             Debug.Log("The stage has not a next stage to unlock.");
         }
     }
+
+    public void ChangeMoney(int zQuantity)
+    {
+        Money = Mathf.Clamp(Money + zQuantity, 0, int.MaxValue);
+    }
+
 }
+

@@ -60,6 +60,8 @@ public class SaveManager : MonoBehaviour
     const string K_Settings_Music = "K_Settings_Music";
     const string K_Settings_SFX = "K_Settings_SFX";
     const string K_LastVisitedStage = "K_LastVisitedStage";
+    const string K_Money = "K_Money";
+
 
 
     const string Tag_Name = "name";
@@ -84,6 +86,8 @@ public class SaveManager : MonoBehaviour
 
         ReadLastVisitedStage();
 
+        ReadMoney();
+
         ReadSettings();
     }
 
@@ -95,17 +99,11 @@ public class SaveManager : MonoBehaviour
 
         SaveLastVisitedStage();
 
+        SaveMoney();
+
         SaveSettings();
 
         SaveVersion();
-    }
-
-    public void SaveLastVisitedStage()
-    {
-        if (GameManager.Instance.lastLoadedStagePrefab != null)
-        {
-            PlayerPrefs.SetString(K_LastVisitedStage, GameManager.Instance.lastLoadedStagePrefab.name);
-        }
     }
 
     public void ResetAll()
@@ -141,6 +139,66 @@ public class SaveManager : MonoBehaviour
         GameManager.Instance.Run.Reset();
         SaveProgress();
         Debug.Log("Created data for the first time");
+    }
+
+    void SaveVersion()
+    {
+        PlayerPrefs.SetString("VERSIONSTRING", GameManager.VERSIONSTRING);
+    }
+
+    public void SaveLastVisitedStage()
+    {
+        if (GameManager.Instance.lastLoadedStagePrefab != null)
+        {
+            PlayerPrefs.SetString(K_LastVisitedStage, GameManager.Instance.lastLoadedStagePrefab.name);
+        }
+    }
+
+    void SaveMoney()
+    {
+        PlayerPrefs.SetInt(K_Money, GameManager.Instance.Run.Money);
+    }
+
+    void SaveHeroes()
+    {
+        string _completeSerialization = "";
+
+        foreach (Hero hero in GameManager.Instance.Run.UnlockedHeroes)
+        {
+            _completeSerialization += SerializeHero(hero);
+            _completeSerialization += HeroSerialSeparator;
+        }
+
+        PlayerPrefs.SetString(K_Heroes, _completeSerialization);
+
+
+        string currentHero = "";
+        if (GameManager.Instance.Run.CurrentHero != null)
+            currentHero = GameManager.Instance.Run.CurrentHero.name;
+
+        PlayerPrefs.SetString(K_CurrentHero, Intag(Tag_Name, currentHero));
+    }
+
+    public void SaveStages()
+    {
+        string _completeSerialization = "";
+
+        foreach (Stage _stg in GameManager.Instance.Collections.StagesInGame)
+        {
+            if (GameManager.Instance.Run.UnlockedStages.Any(s => s.name == _stg.name))
+            {
+                //Stage is unlocked
+                _completeSerialization += SerializeStage(_stg);
+                _completeSerialization += StageSerialSeparator;
+            }
+        }
+
+        if (_completeSerialization.EndsWith(StageSerialSeparator))
+        {
+            _completeSerialization = _completeSerialization.Remove(_completeSerialization.Length - StageSerialSeparator.Length);
+        }
+
+        PlayerPrefs.SetString(K_Stages, _completeSerialization);
     }
 
     void ReadLastVisitedStage()
@@ -212,52 +270,35 @@ public class SaveManager : MonoBehaviour
 
     }
 
-    void SaveVersion()
+    public void SaveSettings()
     {
-        PlayerPrefs.SetString("VERSIONSTRING", GameManager.VERSIONSTRING);
+        PlayerPrefs.SetInt(K_Settings_Music, GameManager.Instance.MuteMusic ? 1 : 0);
+        PlayerPrefs.SetInt(K_Settings_SFX, GameManager.Instance.MuteSFX ? 1 : 0);
     }
 
-    void SaveHeroes()
+    void ReadSettings()
     {
-        string _completeSerialization = "";
-
-        foreach (Hero hero in GameManager.Instance.Run.UnlockedHeroes)
-        {
-            _completeSerialization += SerializeHero(hero);
-            _completeSerialization += HeroSerialSeparator;
-        }
-
-        PlayerPrefs.SetString(K_Heroes, _completeSerialization);
-
-
-        string currentHero = "";
-        if (GameManager.Instance.Run.CurrentHero != null)
-            currentHero = GameManager.Instance.Run.CurrentHero.name;
-
-        PlayerPrefs.SetString(K_CurrentHero, Intag(Tag_Name, currentHero));
+        GameManager.Instance.MuteMusic = PlayerPrefs.GetInt(K_Settings_Music) == 0 ? false : true;
+        GameManager.Instance.MuteSFX = PlayerPrefs.GetInt(K_Settings_SFX) == 0 ? false : true;
     }
 
-    public void SaveStages()
+    void ReadMoney()
     {
-        string _completeSerialization = "";
-
-        foreach (Stage _stg in GameManager.Instance.Collections.StagesInGame)
+        if (PlayerPrefs.HasKey(K_Money))
         {
-            if (GameManager.Instance.Run.UnlockedStages.Any(s => s.name == _stg.name))
-            {
-                //Stage is unlocked
-                _completeSerialization += SerializeStage(_stg);
-                _completeSerialization += StageSerialSeparator;
-            }
+            GameManager.Instance.Run.Money = PlayerPrefs.GetInt(K_Money);
         }
-
-        if (_completeSerialization.EndsWith(StageSerialSeparator))
+        else
         {
-            _completeSerialization = _completeSerialization.Remove(_completeSerialization.Length - StageSerialSeparator.Length);
+            GameManager.Instance.Run.Money = 0;
         }
-
-        PlayerPrefs.SetString(K_Stages, _completeSerialization);
     }
+
+
+
+
+
+
 
     string SerializeStage(Stage stg)
     {
@@ -276,18 +317,6 @@ public class SaveManager : MonoBehaviour
         //Serialize upgrades here
 
         return _s;
-    }
-
-    void ReadSettings()
-    {
-        GameManager.Instance.MuteMusic = PlayerPrefs.GetInt(K_Settings_Music) == 0 ? false : true;
-        GameManager.Instance.MuteSFX = PlayerPrefs.GetInt(K_Settings_SFX) == 0 ? false : true;
-    }
-
-    public void SaveSettings()
-    {
-        PlayerPrefs.SetInt(K_Settings_Music, GameManager.Instance.MuteMusic ? 1 : 0);
-        PlayerPrefs.SetInt(K_Settings_SFX, GameManager.Instance.MuteSFX ? 1 : 0);
     }
 
     public static string Intag(string tag, string msg)

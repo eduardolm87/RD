@@ -24,6 +24,9 @@ public class LevelSelectMenu : MonoBehaviour
             if (Map.PlayerNavigator.State != Mapnavigator.States.IDLE)
                 return false;
 
+            if (Map.ShowingCinematic)
+                return false;
+
             return true;
         }
     }

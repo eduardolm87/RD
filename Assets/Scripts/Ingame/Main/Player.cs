@@ -153,7 +153,7 @@ public class Player : MonoBehaviour
         }
 
         BuildingVisibilityTrigger building = other.GetComponent<BuildingVisibilityTrigger>();
-        if(building!=null)
+        if (building != null)
         {
             building.Building.Enter();
         }
@@ -611,7 +611,7 @@ public class Player : MonoBehaviour
     {
         if (GameManager.Instance.WinStagesWith1Key)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            if (Input.GetKeyDown(KeyCode.Alpha1) && Mode == Modes.AIMING)
             {
                 GameManager.Instance.WinStage();
                 //Monster[] _monsters = GameObject.FindObjectsOfType<Monster>();

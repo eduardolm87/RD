@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Wind : MonoBehaviour
 {
-   public float Force = 50;
+    public float Force = 50;
 
     void OnTriggerStay2D(Collider2D other)
     {
