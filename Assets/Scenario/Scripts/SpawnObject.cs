@@ -6,7 +6,7 @@ public class SpawnObject : MonoBehaviour
     SpriteRenderer Renderer;
 
     [SerializeField]
-    GameObject ObjectToSpawn;
+    protected GameObject ObjectToSpawn;
 
     public bool Refresh = false;
 
@@ -66,12 +66,12 @@ public class SpawnObject : MonoBehaviour
 
 
 
-    void Start()
+    protected virtual void Start()
     {
         Spawn();
     }
 
-    void Spawn()
+    protected virtual void Spawn()
     {
         GameObject Instantiated = Instantiate(ObjectToSpawn, transform.position, transform.rotation) as GameObject;
         Instantiated.transform.SetParent(transform.parent);

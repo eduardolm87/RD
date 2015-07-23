@@ -13,6 +13,8 @@ public class Chest : Interactive
 
     private List<Collider2D> Colliders = new List<Collider2D>();
 
+    public bool Randomize = false;
+
     public override void OnPlayerTouch()
     {
         Debug.Log("Player touch");
@@ -23,10 +25,19 @@ public class Chest : Interactive
 
     void AnimationEnd()
     {
-        for (int i = 0; i < Contents.Count; i++)
+        if (!Randomize)
         {
-            SpawnContent(Contents[i], i);
+            for (int i = 0; i < Contents.Count; i++)
+            {
+                SpawnContent(Contents[i], i);
+            }
         }
+        else
+        {
+            int choice = Random.Range(0, Contents.Count);
+            SpawnContent(Contents[choice], 0);
+        }
+
 
         Invoke("Disappear", 0.5f);
     }

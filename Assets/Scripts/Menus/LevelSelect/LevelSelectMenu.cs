@@ -17,6 +17,8 @@ public class LevelSelectMenu : MonoBehaviour
 
     private Stage CurrentStage = null;
 
+    public Text Money;
+
     public bool InputAccepted
     {
         get
@@ -46,9 +48,12 @@ public class LevelSelectMenu : MonoBehaviour
             CurrentStage = zStageToLoad;
         }
 
+
         GameManager.Instance.SoundManager.PlayMusic("Overworld01");
 
         gameObject.SetActive(true);
+
+        RefreshInfo();
 
         LoadCurrentStage();
     }
@@ -90,5 +95,10 @@ public class LevelSelectMenu : MonoBehaviour
         CurrentStage = zStage;
         GameManager.Instance.lastLoadedStagePrefab = zStage;
         GameManager.Instance.Progress.SaveLastVisitedStage();
+    }
+
+    void RefreshInfo()
+    {
+        Money.text = GameManager.Instance.Run.Money.ToString();
     }
 }

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: a77d722e89ddaaf4baf02e85087faf46
-timeCreated: 1437351749
+timeCreated: 1437395548
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -1402,8 +1402,8 @@ TextureImporter:
     - name: rogueliketiles_122
       rect:
         serializedVersion: 2
-        x: 0
-        y: 44
+        x: 64
+        y: 60
         width: 16
         height: 16
       alignment: 0
@@ -1412,7 +1412,7 @@ TextureImporter:
     - name: rogueliketiles_123
       rect:
         serializedVersion: 2
-        x: 16
+        x: 0
         y: 44
         width: 16
         height: 16
@@ -1422,7 +1422,7 @@ TextureImporter:
     - name: rogueliketiles_124
       rect:
         serializedVersion: 2
-        x: 32
+        x: 16
         y: 44
         width: 16
         height: 16
@@ -1432,8 +1432,8 @@ TextureImporter:
     - name: rogueliketiles_125
       rect:
         serializedVersion: 2
-        x: 0
-        y: 28
+        x: 32
+        y: 44
         width: 16
         height: 16
       alignment: 0
@@ -1442,7 +1442,7 @@ TextureImporter:
     - name: rogueliketiles_126
       rect:
         serializedVersion: 2
-        x: 16
+        x: 0
         y: 28
         width: 16
         height: 16
@@ -1452,7 +1452,7 @@ TextureImporter:
     - name: rogueliketiles_127
       rect:
         serializedVersion: 2
-        x: 32
+        x: 16
         y: 28
         width: 16
         height: 16
@@ -1462,18 +1462,8 @@ TextureImporter:
     - name: rogueliketiles_128
       rect:
         serializedVersion: 2
-        x: 0
-        y: 12
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: rogueliketiles_129
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 12
+        x: 32
+        y: 28
         width: 16
         height: 16
       alignment: 0

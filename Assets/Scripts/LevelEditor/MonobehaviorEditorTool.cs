@@ -44,7 +44,7 @@ public class MonobehaviorEditorTool : MonoBehaviour
 
     public void Apply(List<SpriteRenderer> zTiles)
     {
-        zTiles.RemoveAll(t => Tiles.Any(l => l.Graphic == t.sprite));
+        //zTiles.RemoveAll(t => Tiles.Any(l => l.Graphic == t.sprite));
 
         AllTiles = zTiles;
 

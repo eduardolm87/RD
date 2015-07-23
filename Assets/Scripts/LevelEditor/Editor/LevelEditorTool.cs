@@ -236,8 +236,8 @@ public class LevelEditorTool : Editor
 
         List<SpriteRenderer> FloorTiles = StageInScene.GetComponentsInChildren<SpriteRenderer>().ToList();
 
-        FloorTiles.RemoveAll(t => t.sprite != tool.ReferenceSprite);
-
+        FloorTiles.RemoveAll(t => !tool.Tiles.Any(x => x.Graphic == t.sprite) && t != tool.ReferenceSprite);
+        //FloorTiles.RemoveAll(t => t != tool.ReferenceSprite);
         tool.Apply(FloorTiles);
     }
 
