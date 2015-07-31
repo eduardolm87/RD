@@ -43,7 +43,7 @@ public class Stage : MonoBehaviour
     public Monster EnemyToKill = null;
 
     public AudioClip Music;
-    public Stage NextStageUnlocked;
+    public List<Stage> NextStagesUnlocked = new List<Stage>();
 
     [HideInInspector]
     public Dictionary<Transform, float> _previousIntertia = new Dictionary<Transform, float>();

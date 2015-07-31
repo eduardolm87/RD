@@ -122,6 +122,7 @@ public class Mapcontrol : MonoBehaviour
                         case MapStep.Access.TRANSIT:
                             shouldUnlock = path.ThisPathArrivesToAVisitableLocation(mapStep);
                             break;
+
                     }
 
                     if (shouldUnlock)
@@ -186,6 +187,9 @@ public class Mapcontrol : MonoBehaviour
             }
 
             GameManager.Instance.LevelSelectMenu.StageInfo.LoadInfo(NewestStage);
+            yield return null;
+
+            NavigationInterface.Hide();
 
             mapStep.Hide();
 

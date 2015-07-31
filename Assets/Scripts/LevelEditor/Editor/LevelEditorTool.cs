@@ -30,7 +30,7 @@ public class LevelEditorTool : Editor
         Start = serializedObject.FindProperty("StartPoint");
         Finish = serializedObject.FindProperty("PlaceToReach");
         Music = serializedObject.FindProperty("Music");
-        NextStage = serializedObject.FindProperty("NextStageUnlocked");
+        NextStage = serializedObject.FindProperty("NextStagesUnlocked");
 
 
         StageInScene = GameObject.FindObjectsOfType<Stage>().ToList().FirstOrDefault(stg => stg == target);
@@ -106,7 +106,7 @@ public class LevelEditorTool : Editor
     {
         EditorGUILayout.PropertyField(Start);
         EditorGUILayout.PropertyField(Finish);
-        EditorGUILayout.PropertyField(NextStage);
+        EditorGUILayout.PropertyField(NextStage, true);
     }
 
     void Save()

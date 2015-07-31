@@ -103,20 +103,30 @@ public class RunProgress
 
     public void UnlockNewStageFrom(Stage zCompletedStage)
     {
-        if (zCompletedStage.NextStageUnlocked != null)
+        Debug.Log("Estoy en stage " + zCompletedStage.name);
+        Debug.Log("cuyas zCompletedStage.NextStagesUnlocked tiene : " + zCompletedStage.NextStagesUnlocked.Count);
+
+        List<Stage> stagesToUnlock = zCompletedStage.NextStagesUnlocked;
+
+        Debug.Log("stagesToUnlock: " + string.Join(",", stagesToUnlock.ConvertAll(x => x.name).ToArray()));
+
+        stagesToUnlock.RemoveAll(st => !GameManager.Instance.Collections.StagesInGame.Contains(st));
+        stagesToUnlock.RemoveAll(st => GameManager.Instance.Run.UnlockedStages.Contains(st));
+
+        Debug.Log("stagesToUnlock despues del remove: " + string.Join(",", stagesToUnlock.ConvertAll(x => x.name).ToArray()));
+
+
+        if (stagesToUnlock.Count == 0)
         {
-            if (GameManager.Instance.Collections.StagesInGame.Contains(zCompletedStage.NextStageUnlocked))
-            {
-                UnlockedStages.Add(zCompletedStage.NextStageUnlocked);
-            }
-            else
-            {
-                Debug.LogError("Tried to unlock a stage not included in the Collections");
-            }
+            Debug.Log("No stages unlocked.");
         }
         else
         {
-            Debug.Log("The stage has not a next stage to unlock.");
+            foreach (Stage st in stagesToUnlock)
+            {
+                UnlockedStages.Add(st);
+                Debug.Log("Unlocked " + st.name);
+            }
         }
     }
 
