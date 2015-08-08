@@ -11,6 +11,7 @@ public class BossSpawn : SpawnObject
     {
         Spawn();
         InvokeRepeating("CheckDefeat", 1, 1);
+        GetComponent<SpriteRenderer>().enabled = false;
     }
 
     protected override void Spawn()
@@ -28,8 +29,11 @@ public class BossSpawn : SpawnObject
                 Debug.LogError("Error: No object to spawn when enemy is dead");
                 return;
             }
-
-            instantiatedObject.SetActive(true);
+            else
+            {
+                ObjectToEnableWhenDie.SetActive(true);
+                Destroy(gameObject);
+            }
         }
     }
 }

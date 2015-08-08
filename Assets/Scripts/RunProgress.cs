@@ -103,18 +103,10 @@ public class RunProgress
 
     public void UnlockNewStageFrom(Stage zCompletedStage)
     {
-        Debug.Log("Estoy en stage " + zCompletedStage.name);
-        Debug.Log("cuyas zCompletedStage.NextStagesUnlocked tiene : " + zCompletedStage.NextStagesUnlocked.Count);
-
         List<Stage> stagesToUnlock = zCompletedStage.NextStagesUnlocked;
-
-        Debug.Log("stagesToUnlock: " + string.Join(",", stagesToUnlock.ConvertAll(x => x.name).ToArray()));
 
         stagesToUnlock.RemoveAll(st => !GameManager.Instance.Collections.StagesInGame.Contains(st));
         stagesToUnlock.RemoveAll(st => GameManager.Instance.Run.UnlockedStages.Contains(st));
-
-        Debug.Log("stagesToUnlock despues del remove: " + string.Join(",", stagesToUnlock.ConvertAll(x => x.name).ToArray()));
-
 
         if (stagesToUnlock.Count == 0)
         {
@@ -125,7 +117,6 @@ public class RunProgress
             foreach (Stage st in stagesToUnlock)
             {
                 UnlockedStages.Add(st);
-                Debug.Log("Unlocked " + st.name);
             }
         }
     }

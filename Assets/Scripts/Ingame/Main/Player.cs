@@ -265,7 +265,7 @@ public class Player : MonoBehaviour
             }) });
     }
 
-    void RefreshHUD()
+    public void RefreshHUD()
     {
         if (Time.timeScale == 1)
             GameManager.Instance.TimeRealplay += refreshHUDFreq;

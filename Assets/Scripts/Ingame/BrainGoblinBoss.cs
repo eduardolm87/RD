@@ -26,7 +26,7 @@ public class BrainGoblinBoss : BrainTransformFollower
 
         bool acted = false;
 
-        if (PlayerInVisionRange())
+        if (PlayerInVisionRange() && PlayerInLineOfSight())
         {
             if (SqrDistanceToPlayer < monster.Attributes.range / 3f)
             {

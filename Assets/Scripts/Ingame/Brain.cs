@@ -88,10 +88,29 @@ public class Brain : MonoBehaviour
     {
         if (GameManager.Instance.currentPlayer != null)
         {
-            return (GameManager.Instance.currentPlayer.transform.position - transform.position).sqrMagnitude < monster.Attributes.range;
+            if ((GameManager.Instance.currentPlayer.transform.position - transform.position).sqrMagnitude < monster.Attributes.range) ;
+            {
+                return true;
+            }
         }
-        else
-            return false;
+
+        return false;
+    }
+
+    protected bool PlayerInLineOfSight()
+    {
+        Vector2 direction = GameManager.Instance.currentPlayer.transform.position - transform.position;
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, direction.magnitude);
+
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.transform.GetComponent<Rigidbody2D>() == null)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public float DistanceToPlayer

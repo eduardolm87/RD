@@ -12,6 +12,8 @@ public class HUD : MonoBehaviour
     public Text Attack;
     //public Text Defense;
 
+    public Text Money;
+
     public Image Portrait;
 
     void Update()
@@ -25,13 +27,15 @@ public class HUD : MonoBehaviour
 
         StaminaBar.fillAmount = attributes.Stamina * 1f / attributes.Stamina_max;
 
-        Speed.text = Mathf.FloorToInt(GameManager.Instance.currentPlayer.Attributes.Impulse).ToString();
+        Speed.text = Mathf.CeilToInt(GameManager.Instance.currentPlayer.Attributes.Impulse / 10).ToString();
         Attack.text = GameManager.Instance.currentPlayer.Attributes.Attack.ToString();
         //Defense.text = GameManager.Instance.currentPlayer.Attributes.Defense.ToString();
 
         Name.text = GameManager.Instance.Run.CurrentHero.Name.ToUpper();
 
         Portrait.sprite = GameManager.Instance.Run.CurrentHero.Graphic;
+
+        UpdateMoney();
     }
 
     void UpdatePowerBar()
@@ -68,4 +72,8 @@ public class HUD : MonoBehaviour
             GameManager.Instance.currentPlayer.pressedPauseButton = true;
     }
 
+    public void UpdateMoney()
+    {
+        Money.text = GameManager.Instance.Run.Money.ToString();
+    }
 }

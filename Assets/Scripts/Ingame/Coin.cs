@@ -11,6 +11,8 @@ public class Coin : Powerup
 
         GameManager.Instance.SoundManager.Play("Coin");
 
+        GameManager.Instance.currentPlayer.RefreshHUD();
+
         Disappear();
     }
 }

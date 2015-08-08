@@ -10,6 +10,7 @@ public class ContinuousSpawner : SpawnObject
     protected override void Start()
     {
         InvokeRepeating("CheckSpawn", 0.5f, 5);
+        GetComponent<SpriteRenderer>().enabled = false;
     }
 
     void CheckSpawn()

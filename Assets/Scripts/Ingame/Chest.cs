@@ -53,7 +53,7 @@ public class Chest : Interactive
     void SpawnContent(GameObject zGameObject, int zIndex)
     {
         GameObject instantiatedObject = Instantiate(zGameObject, RandomPositionAround(), Quaternion.identity) as GameObject;
-
+        instantiatedObject.transform.SetParent(GameManager.Instance.currentlyLoadedStage.transform);
         Collider2D oCollider = instantiatedObject.GetComponent<Collider2D>();
         if (oCollider != null)
         {

@@ -5,7 +5,7 @@ public class BrainSoldier : Brain
 {
 
     float Frequency = 0.65f;
-    float Cooldown = 3.5f;
+    float Cooldown = 1.5f;
     float cooldownTimer = 0;
 
     protected override void Start()

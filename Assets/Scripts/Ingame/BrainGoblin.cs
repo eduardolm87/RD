@@ -21,7 +21,7 @@ public class BrainGoblin : Brain
 
     void Act()
     {
-        if (PlayerInVisionRange())
+        if (PlayerInVisionRange() && PlayerInLineOfSight())
         {
             if (Time.time - cooldownTimer > Cooldown)
             {

@@ -136,6 +136,7 @@ public class SaveManager : MonoBehaviour
     void FirstTime()
     {
         DeleteAnyPreviousData();
+        GameManager.Instance.lastLoadedStagePrefab = null;
         GameManager.Instance.Run.Reset();
         SaveProgress();
         Debug.Log("Created data for the first time");
